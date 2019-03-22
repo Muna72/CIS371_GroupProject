@@ -12,3 +12,36 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav li {
+  float: right;
+}
+
+/* used to preserve list order */
+.menuItems {
+  float: right;
+}
+
+nav li:first-child {
+  float: left;
+}
+
+nav li:last-child {
+  background-color: #31809f;
+}
+
+nav a {
+  display: block;
+  margin: 20px 15px;
+  text-decoration: none;
+  text-align: center;
+  color: #fff;
+}
