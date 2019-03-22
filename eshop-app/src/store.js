@@ -1,1 +1,0 @@
-/** This is where the state management occurs with Redux */
