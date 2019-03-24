@@ -75,8 +75,6 @@ nav a {
   width: 30%;
   top: 53px;
   min-height: 50px;
-
-  display: none;
 }
 
 .searchResults ul {
@@ -91,6 +89,44 @@ nav a {
   margin-top: 5px;
 }
 
+.searchResults ul li {
+  background-color: #fb9c6c;
+}
+
 .main {
   margin: 5px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+th {
+  background-color: #fb9c6c;
+  color: white;
+}
+
+.checkoutBtn {
+  padding: 10px;
+  float: right;
+  margin: 15px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #31809f;
+}
+
+.emptyCartBtn {
+  background-color: #d55121;
 }
