@@ -7,6 +7,7 @@ import Account from "./components/Account";
 import Cart from "./components/Cart";
 import Error from "./components/Error";
 
+//import "./firebase.js";
 import "./index.css";
 
 function AppRouter() {

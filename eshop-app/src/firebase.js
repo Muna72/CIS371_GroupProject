@@ -1,6 +1,6 @@
 import firebase from "firebase";
 
-var config = {
+const config = {
   apiKey: "AIzaSyCB00wchyxzKiAuC7zD10eS0WSrXEQLVbU",
   authDomain: "cis371semesterproject.firebaseapp.com",
   databaseURL: "https://cis371semesterproject.firebaseio.com",
@@ -11,8 +11,4 @@ var config = {
 
 firebase.initializeApp(config);
 
-function Firebase() {
-  return <React>Firebase</React>;
-}
-
-export default Firebase;
+export default firebase;

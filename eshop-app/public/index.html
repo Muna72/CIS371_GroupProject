@@ -8,6 +8,20 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta name="theme-color" content="#000000" />
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script>
+      const config = {
+        apiKey: "AIzaSyCB00wchyxzKiAuC7zD10eS0WSrXEQLVbU",
+        authDomain: "cis371semesterproject.firebaseapp.com",
+        databaseURL: "https://cis371semesterproject.firebaseio.com",
+        projectId: "cis371semesterproject",
+        storageBucket: "cis371semesterproject.appspot.com",
+        messagingSenderId: "54214005334"
+      };
+
+      firebase.initializeApp(config);
+    </script>
+
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -22,7 +36,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Amazoff</title>
+    <title>amazoff</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
