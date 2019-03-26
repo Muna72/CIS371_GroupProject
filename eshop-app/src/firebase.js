@@ -1,14 +1,15 @@
-import firebase from "firebase";
+import * as firebase from "firebase";
+import { firebaseConfig } from "./config";
 
-const config = {
-  apiKey: "AIzaSyCB00wchyxzKiAuC7zD10eS0WSrXEQLVbU",
-  authDomain: "cis371semesterproject.firebaseapp.com",
-  databaseURL: "https://cis371semesterproject.firebaseio.com",
-  projectId: "cis371semesterproject",
-  storageBucket: "cis371semesterproject.appspot.com",
-  messagingSenderId: "54214005334"
-};
+firebase.initializeApp(firebaseConfig);
+var rootRef = firebase.database().ref(); // ref() points to root node without arguement
+var productsRef = rootRef.child("products");
 
-firebase.initializeApp(config);
+productsRef.on("child_added", snapshot => {
+  var product = snapshot.val();
+  console.log(product.name);
 
-export default firebase;
+  this.setState({
+    products: snapshot.val()
+  });
+});

@@ -1,8 +1,12 @@
 import React from "react";
 //import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import ReactDOM from "react-dom";
-import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import * as firebase from "firebase";
+import { firebaseConfig } from "./config";
+import App from "./App";
+
+firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

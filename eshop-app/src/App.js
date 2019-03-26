@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import Navigation from "./components/Navigation";
@@ -7,23 +7,24 @@ import Account from "./components/Account";
 import Cart from "./components/Cart";
 import Error from "./components/Error";
 
-//import "./firebase.js";
 import "./index.css";
 
-function AppRouter() {
-  return (
-    <Router>
-      <div>
-        <Navigation />
-        <Switch>
-          <Route path="/" exact component={Shop} />
-          <Route path="/Cart/" component={Cart} />
-          <Route path="/Account/" component={Account} />
-          <Route component={Error} />
-        </Switch>
-      </div>
-    </Router>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <Navigation />
+          <Switch>
+            <Route path="/" exact component={Shop} />
+            <Route path="/Cart/" component={Cart} />
+            <Route path="/Account/" component={Account} />
+            <Route component={Error} />
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
 
-export default AppRouter;
+export default App;
