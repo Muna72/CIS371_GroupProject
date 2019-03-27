@@ -1,7 +1,28 @@
-import React from "react";
+import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import * as firebase from "firebase";
+import { firebaseConfig } from "../config";
 
-var isLoggedIn = true;
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+var isLoggedIn = false;
+
+function authUser() {
+  return new Promise(function(resolve, reject) {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        isLoggedIn = true;
+        resolve(user);
+      } else {
+        isLoggedIn = false;
+        reject("User not logged in");
+      }
+    });
+  });
+}
+
 var searching = false;
 
 const Search = () => {
@@ -19,47 +40,77 @@ const Search = () => {
 };
 
 const LoggedInNav = () => {
+  console.log(isLoggedIn);
   if (isLoggedIn) {
     return (
-      <li>
-        <NavLink to="/Cart/">Cart</NavLink>
-      </li>
+      <div>
+        <li>
+          <NavLink to="/Cart/">Cart</NavLink>
+        </li>
+        <li>
+          <NavLink to="/Account/">Account</NavLink>
+        </li>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <li>
+          <NavLink to="/SignIn/">Sign In</NavLink>
+        </li>
+      </div>
+    );
+  }
+};
+
+class Navigation extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isAuthenticating: false
+    };
+  }
+
+  componentDidMount() {
+    authUser().then(
+      user => {
+        this.setState({ isAuthenticating: false });
+      },
+      error => {
+        this.setState({ isAuthenticating: false });
+      }
     );
   }
 
-  return null;
-};
-
-const Navigation = () => {
-  return (
-    <nav>
-      <ul>
-        <li>
-          <NavLink to="/">
-            <img
-              src="https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/amazoff.gif?raw=true"
-              alt="logo"
-              id="logo"
-            />
-          </NavLink>
-        </li>
-        <input
-          type="text"
-          className="search"
-          onFocus={Search}
-          placeholder="Search..."
-        />
-
-        <div className="menuItems">
-          <LoggedInNav />
+  render() {
+    if (this.state.isAuthenticating) return null;
+    return (
+      <nav>
+        <ul>
           <li>
-            <NavLink to="/Account/">Account</NavLink>
+            <NavLink to="/">
+              <img
+                src="https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/amazoff.gif?raw=true"
+                alt="logo"
+                id="logo"
+              />
+            </NavLink>
           </li>
-        </div>
-      </ul>
-      {searching ? <Search /> : null}
-    </nav>
-  );
-};
+          <input
+            type="text"
+            className="search"
+            onFocus={Search}
+            placeholder="Search..."
+          />
+
+          <div className="menuItems">
+            <LoggedInNav />
+          </div>
+        </ul>
+        {searching ? <Search /> : null}
+      </nav>
+    );
+  }
+}
 
 export default Navigation;

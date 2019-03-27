@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as firebase from "firebase";
 
 var storeProducts = [];
+var items = null;
 
 class GenerateItems extends Component {
   constructor() {
@@ -17,10 +18,22 @@ class GenerateItems extends Component {
     const rootRef = firebase.database().ref(); // ref() points to root node without arguement
     const productsRef = rootRef.child("products");
 
+    this.setState({
+      products: null
+    });
+
+    storeProducts = [];
+
     productsRef.on("child_added", snapshot => {
       var product = snapshot.val();
 
-      storeProducts.push(product);
+      if (storeProducts.length > 0) {
+        if (storeProducts.productID !== product.productID) {
+          storeProducts.push(product);
+        }
+      } else {
+        storeProducts.push(product);
+      }
 
       this.setState({
         products: storeProducts
@@ -29,7 +42,7 @@ class GenerateItems extends Component {
   }
 
   render() {
-    var items = storeProducts.map(product => (
+    items = storeProducts.map(product => (
       <div key={product.productID} className="storeItem">
         <div className="thumbnailContainer">
           <img src={product.imgUrl} className="thumbnail" alt="" />
