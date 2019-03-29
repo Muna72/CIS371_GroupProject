@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import * as firebase from "firebase";
+import CurrencyFormat from "react-currency-format";
 
 var storeProducts = [];
 var items = null;
@@ -58,7 +59,15 @@ class GenerateItems extends Component {
           <p>
             <b>{product.name}</b>
           </p>
-          <p>${product.price}</p>
+          <CurrencyFormat
+            value={product.price}
+            displayType={"text"}
+            thousandSeparator={true}
+            prefix={"$"}
+            decimalScale={2}
+            fixedDecimalScale={true}
+            renderText={value => <div>{value}</div>}
+          />
         </div>
       </div>
     ));

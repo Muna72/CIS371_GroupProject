@@ -40,7 +40,7 @@ const Search = () => {
 };
 
 const LoggedInNav = () => {
-  console.log(isLoggedIn);
+  console.log("Nav logged: " + isLoggedIn);
   if (isLoggedIn) {
     return (
       <div>
@@ -67,7 +67,8 @@ class Navigation extends Component {
   constructor() {
     super();
     this.state = {
-      isAuthenticating: false
+      isAuthenticating: false,
+      loggedIn: isLoggedIn
     };
   }
 
@@ -84,6 +85,9 @@ class Navigation extends Component {
 
   render() {
     if (this.state.isAuthenticating) return null;
+
+    console.log("logged in state: " + this.state.loggedIn);
+
     return (
       <nav>
         <ul>

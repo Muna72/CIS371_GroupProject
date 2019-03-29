@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-//import { Redirect } from "react-router";
+import { Redirect } from "react-router";
 import * as firebase from "firebase";
 
 var userEmail = "";
@@ -11,7 +11,7 @@ class SignIn extends Component {
     this.state = {
       email: "",
       password: "",
-      error: <br />
+      redirect: false
     };
 
     this.signInUser = this.signInUser.bind(this);
@@ -46,13 +46,10 @@ class SignIn extends Component {
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
+        // redirect to new page and update nav
         console.log(firebaseUser);
+        return <Redirect push to="/" />;
       }
-    });
-
-    var errorCode = e.code;
-    this.setState({ error: errorCode }, function() {
-      console.log(errorCode);
     });
   };
 
@@ -73,14 +70,13 @@ class SignIn extends Component {
         console.log(firebaseUser);
       }
     });
-
-    var errorCode = e.code;
-    this.setState({ error: errorCode }, function() {
-      console.log(errorCode);
-    });
   };
 
-  // <Redirect to="/" /> upon sign in
+  handleOnClick = () => {
+    // some action...
+    // then redirect
+    this.setState({ redirect: true });
+  };
 
   render() {
     return (
