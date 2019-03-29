@@ -2,28 +2,26 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import * as firebase from "firebase";
 import { firebaseConfig } from "../config";
+import { withRouter } from "react-router-dom";
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-var isLoggedIn = false;
-
-function authUser() {
-  return new Promise(function(resolve, reject) {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        isLoggedIn = true;
-        resolve(user);
-      } else {
-        isLoggedIn = false;
-        reject("User not logged in");
-      }
-    });
-  });
-}
+// remove global, update state (render invoked auto)
 
 var searching = false;
+
+const SearchBar = () => {
+  return (
+    <input
+      type="text"
+      className="search"
+      onFocus={Search}
+      placeholder="Search..."
+    />
+  );
+};
 
 const Search = () => {
   return (
@@ -39,54 +37,124 @@ const Search = () => {
   );
 };
 
-const LoggedInNav = () => {
-  console.log("Nav logged: " + isLoggedIn);
-  if (isLoggedIn) {
-    return (
-      <div>
-        <li>
-          <NavLink to="/Cart/">Cart</NavLink>
-        </li>
-        <li>
-          <NavLink to="/Account/">Account</NavLink>
-        </li>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <li>
-          <NavLink to="/SignIn/">Sign In</NavLink>
-        </li>
-      </div>
-    );
-  }
-};
-
 class Navigation extends Component {
   constructor() {
     super();
     this.state = {
       isAuthenticating: false,
-      loggedIn: isLoggedIn
+      loggedIn: false
     };
   }
 
+  //fix me
   componentDidMount() {
-    authUser().then(
-      user => {
-        this.setState({ isAuthenticating: false });
-      },
-      error => {
-        this.setState({ isAuthenticating: false });
-      }
+    firebase.auth().onAuthStateChanged(
+      function(user) {
+        if (user) {
+          // fix me
+          this.setState({ loggedIn: true });
+        }
+      }.bind(this)
     );
   }
+
+  // functional comppnenet are stateless, inherit from
+  // use if statements inside render to check state variables
+  //logged in nav
 
   render() {
     if (this.state.isAuthenticating) return null;
 
     console.log("logged in state: " + this.state.loggedIn);
+
+    if (this.state.loggedIn && this.props.location.pathname === "/") {
+      return (
+        <nav>
+          <ul>
+            <li>
+              <NavLink to="/">
+                <img
+                  src="https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/amazoff.gif?raw=true"
+                  alt="logo"
+                  id="logo"
+                />
+              </NavLink>
+            </li>
+            <SearchBar />
+
+            <div className="menuItems">
+              <div>
+                <li>
+                  <NavLink to="/Cart/">Cart</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/Account/">Account</NavLink>
+                </li>
+              </div>
+            </div>
+          </ul>
+          {searching ? <Search /> : null}
+        </nav>
+      );
+    }
+
+    if (this.state.loggedIn && this.props.location.pathname !== "/") {
+      return (
+        <nav>
+          <ul>
+            <li>
+              <NavLink to="/">
+                <img
+                  src="https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/amazoff.gif?raw=true"
+                  alt="logo"
+                  id="logo"
+                />
+              </NavLink>
+            </li>
+
+            <div className="menuItems">
+              <div>
+                <li>
+                  <NavLink to="/Cart/">Cart</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/Account/">Account</NavLink>
+                </li>
+              </div>
+            </div>
+          </ul>
+          {searching ? <Search /> : null}
+        </nav>
+      );
+    }
+
+    if (!this.state.loggedIn && this.props.location.pathname === "/") {
+      return (
+        <nav>
+          <ul>
+            <li>
+              <NavLink to="/">
+                <img
+                  src="https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/amazoff.gif?raw=true"
+                  alt="logo"
+                  id="logo"
+                />
+              </NavLink>
+            </li>
+            <SearchBar />
+
+            <div className="menuItems">
+              <div>
+                <li>
+                  <NavLink to="/SignIn/">Sign In</NavLink>
+                </li>
+              </div>
+            </div>
+          </ul>
+          {searching ? <Search /> : null}
+        </nav>
+      );
+    }
 
     return (
       <nav>
@@ -100,15 +168,13 @@ class Navigation extends Component {
               />
             </NavLink>
           </li>
-          <input
-            type="text"
-            className="search"
-            onFocus={Search}
-            placeholder="Search..."
-          />
 
           <div className="menuItems">
-            <LoggedInNav />
+            <div>
+              <li>
+                <NavLink to="/SignIn/">Sign In</NavLink>
+              </li>
+            </div>
           </div>
         </ul>
         {searching ? <Search /> : null}
@@ -117,4 +183,4 @@ class Navigation extends Component {
   }
 }
 
-export default Navigation;
+export default withRouter(Navigation);

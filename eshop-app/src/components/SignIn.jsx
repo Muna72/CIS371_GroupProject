@@ -20,6 +20,10 @@ class SignIn extends Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   handleInputChange(event) {
     this.setState({ email: event.target.value }, function() {
       userEmail = this.state.email;
@@ -48,7 +52,7 @@ class SignIn extends Component {
       if (firebaseUser) {
         // redirect to new page and update nav
         console.log(firebaseUser);
-        return <Redirect push to="/" />;
+        this.setState({ redirect: true });
       }
     });
   };
@@ -68,17 +72,16 @@ class SignIn extends Component {
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
         console.log(firebaseUser);
+        this.setState({ redirect: true });
       }
     });
   };
 
-  handleOnClick = () => {
-    // some action...
-    // then redirect
-    this.setState({ redirect: true });
-  };
-
   render() {
+    if (this.state.redirect) {
+      return <Redirect push to="/" />;
+    }
+
     return (
       <div className="main">
         <div className="sign-up-container">
