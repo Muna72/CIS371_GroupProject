@@ -41,7 +41,6 @@ class Navigation extends Component {
   constructor() {
     super();
     this.state = {
-      isAuthenticating: false,
       loggedIn: false
     };
   }
@@ -53,6 +52,8 @@ class Navigation extends Component {
         if (user) {
           // fix me
           this.setState({ loggedIn: true });
+        } else {
+          this.setState({ loggedIn: false });
         }
       }.bind(this)
     );
@@ -63,8 +64,6 @@ class Navigation extends Component {
   //logged in nav
 
   render() {
-    if (this.state.isAuthenticating) return null;
-
     console.log("logged in state: " + this.state.loggedIn);
 
     if (this.state.loggedIn && this.props.location.pathname === "/") {
