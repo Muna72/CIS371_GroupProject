@@ -41,7 +41,7 @@
 			"onHand": 111
 		},
 				{
-			"imgUrl": "https://firebasestorage.googleapis.com/v0/b/cis371semesterproject.appspot.com/o/Product%20Pictures%2Fsoap.jpg?alt=media&token=c32f7a6b-cd85-4ab3-a6d0-aebbb1f6525a",
+			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/soap.jpg",
 			"name": "FANCY SOAP",
 			"price": 11,
 			"productID": 1006,
