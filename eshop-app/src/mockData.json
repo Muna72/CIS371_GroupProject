@@ -41,7 +41,7 @@
 			"onHand": 111
 		},
 				{
-			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/soap.jpg",
+			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/soap.jpg?raw=true",
 			"name": "FANCY SOAP",
 			"price": 11,
 			"productID": 1006,
@@ -49,7 +49,7 @@
 			"onHand": 987
 		},
 				{
-			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/stool.jpg",
+			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/stool.jpg?raw=true",
 			"name": "WHITE WOODEN STOOL",
 			"price": 46.99,
 			"productID": 1007,
@@ -57,7 +57,7 @@
 			"onHand": 238
 		},
 				{
-			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/ipod.png",
+			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/ipod.png?raw=true",
 			"name": "APPLE IPOD SHUFFLE",
 			"price": 999.99,
 			"productID": 1008,
@@ -65,7 +65,7 @@
 			"onHand": 461
 		},
 				{
-			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/campingPots.jpg",
+			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/campingPots.jpg?raw=true",
 			"name": "CAMPING POTS COOKING SET",
 			"price": 24.99,
 			"productID": 1009,
@@ -73,7 +73,7 @@
 			"onHand": 502
 		},
 				{
-			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/stroller.png",
+			"imgUrl": "https://github.com/Muna72/CIS371_GroupProject/blob/master/eshop-app/src/img/product%20images/stroller.png?raw=true",
 			"name": "BLACK BABY STROLLER",
 			"price": 249.99,
 			"productID": 1010,
