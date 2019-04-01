@@ -1,0 +1,177 @@
+{
+	"products": [
+		{
+			"imgUrl": "https://guesseu.scene7.com/is/image/GuessEU/M63H24W7JF0-L302-ALTGHOST?wid=1500&fmt=jpeg&qlt=80&op_sharpen=0&op_usm=1.0,1.0,5,0&iccEmbed=0",
+			"name": "CHECK PRINT SHIRT",
+			"price": 26,
+			"productID": 1001,
+			"description": "A sweet shirt",
+			"onHand": 250
+		},
+		{
+			"imgUrl": "https://guesseu.scene7.com/is/image/GuessEU/FLGLO4FAL12-BEIBR?wid=700&amp;fmt=jpeg&amp;qlt=80&amp;op_sharpen=0&amp;op_usm=1.0,1.0,5,0&amp;iccEmbed=0",
+			"name": "GLORIA HIGH LOGO SNEAKER",
+			"price": 91,
+			"productID": 1002,
+			"description": "A sweet sneaker",
+			"onHand": 200
+		},
+		{
+			"imgUrl": "https://guesseu.scene7.com/is/image/GuessEU/HWVG6216060-TAN?wid=700&amp;fmt=jpeg&amp;qlt=80&amp;op_sharpen=0&amp;op_usm=1.0,1.0,5,0&amp;iccEmbed=0",
+			"name": "CATE RIGID BAG",
+			"price": 94.5,
+			"productID": 1003,
+			"description": "A sweet bag",
+			"onHand": 443
+		},
+		{
+			"imgUrl": "http://guesseu.scene7.com/is/image/GuessEU/WC0001FMSWC-G5?wid=520&fmt=jpeg&qlt=80&op_sharpen=0&op_usm=1.0,1.0,5,0&iccEmbed=0",
+			"name": "GUESS CONNECT WATCH",
+			"price": 438.9,
+			"productID": 1004,
+			"description": "A sweet watch",
+			"onHand": 729
+		},
+		{
+			"imgUrl": "https://guesseu.scene7.com/is/image/GuessEU/AW6308VIS03-SAP?wid=700&amp;fmt=jpeg&amp;qlt=80&amp;op_sharpen=0&amp;op_usm=1.0,1.0,5,0&amp;iccEmbed=0",
+			"name": "'70s RETRO GLAM KEFIAH",
+			"price": 20,
+			"productID": 1005,
+			"description": "A sweet thing",
+			"onHand": 111
+		},
+				{
+			"imgUrl": "https://firebasestorage.googleapis.com/v0/b/cis371semesterproject.appspot.com/o/Product%20Pictures%2Fsoap.jpg?alt=media&token=c32f7a6b-cd85-4ab3-a6d0-aebbb1f6525a",
+			"name": "FANCY SOAP",
+			"price": 11,
+			"productID": 1006,
+			"description": "A set of three, really fancy soaps",
+			"onHand": 987
+		},
+				{
+			"imgUrl": "img/product images/stool.jpg",
+			"name": "WHITE WOODEN STOOL",
+			"price": 46.99,
+			"productID": 1007,
+			"description": "A sweet stool",
+			"onHand": 238
+		},
+				{
+			"imgUrl": "img/product images/ipod.png",
+			"name": "APPLE IPOD SHUFFLE",
+			"price": 999.99,
+			"productID": 1008,
+			"description": "A retro, vintage music player",
+			"onHand": 461
+		},
+				{
+			"imgUrl": "img/product images/campingPots.jpg",
+			"name": "CAMPING POTS COOKING SET",
+			"price": 24.99,
+			"productID": 1009,
+			"description": "A sweet set of pots",
+			"onHand": 502
+		},
+				{
+			"imgUrl": "img/product images/stroller.png",
+			"name": "BLACK BABY STROLLER",
+			"price": 249.99,
+			"productID": 1010,
+			"description": "A sweet stroller",
+			"onHand": 197
+		}
+	],
+	
+		"customers": [
+		{
+			"name": "Muna Gigowski",
+			"email": "muna@realemail.com",
+			"userName": "Muna",
+			"password": "munapass1",
+			"shippingAddress": {
+				"streetNum": 123,
+				"streetName": "Crest Ln",
+				"city": "Portland",
+				"state": "Oregon",
+				"country": "United States",
+				"zip": 61785
+			
+			},
+			"cart": [
+
+			],
+			"orders": [ 
+				{
+					"totalPrice": 24.99,
+					"productsInOrder": {
+						"CAMPING POTS COOKING SET": 24.99
+					}
+				},
+				{
+					"totalPrice": 475.9,
+					"productsInOrder": {
+					"CHECK PRINT SHIRT": 26,
+					"FANCY SOAP": 11,
+					"GUESS CONNECT WATCH": 438.9
+					}
+				}
+			]
+		},
+		{
+			"name": "Kyle Turske",
+			"email": "kyle@realemail.com",
+			"userName": "Kyle",
+			"password": "kylepass1",
+			"shippingAddress": {
+				"streetNum": 4790,
+				"streetName": "Rowe Road",
+				"city": "Kansas City",
+				"state": "Kansas",
+				"country": "United States",
+				"zip": 45578
+			
+			},
+			"cart": [
+				{
+				"productID": 1007,
+				"quantity": 1
+				},
+				{
+				"productID": 1004,
+				"quantity": 3
+				}
+			],
+			"orders": [ 
+				{
+				"totalPrice": 46.99,
+				"productsInOrder": {
+					"WHITE WOODEN STOOL": 46.99
+					}
+				}
+			]
+		},
+		{
+			"name": "Trevor West",
+			"email": "trevor@realemail.com",
+			"userName": "Trevor",
+			"password": "trevorpass1",
+			"shippingAddress": {
+				"streetNum": 3295,
+				"streetName": "Smokey Rd",
+				"city": "Atlanta",
+				"state": "Georgia",
+				"country": "United States",
+				"zip": 32956
+			
+			},
+			"cart": {
+				"productID": 1009,
+				"quantity": 2
+			
+			},
+			"orders": [
+			
+			]
+		}
+	]
+}
