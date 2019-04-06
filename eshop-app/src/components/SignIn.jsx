@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { Redirect } from "react-router";
 import * as firebase from "firebase";
 
-var userEmail = "";
-var userPassword = "";
-
 class SignIn extends Component {
   constructor() {
     super();
@@ -26,24 +23,21 @@ class SignIn extends Component {
 
   handleInputChange(event) {
     this.setState({ email: event.target.value }, function() {
-      userEmail = this.state.email;
+      //userEmail = this.state.email;
     });
   }
 
   handlePasswordChange(event) {
     this.setState({ password: event.target.value }, function() {
-      userPassword = this.state.password;
+      //userPassword = this.state.password;
     });
   }
 
   signInUser = e => {
     e.preventDefault();
     const auth = firebase.auth();
-    var email = this.state.email;
-    var pass = this.state.password;
-
-    console.log("Email: " + userEmail);
-    console.log("Password: " + userPassword);
+    let email = this.state.email;
+    let pass = this.state.password;
 
     const promise = auth.signInWithEmailAndPassword(email, pass);
     promise.catch(e => console.log(e.message));
@@ -60,11 +54,8 @@ class SignIn extends Component {
   createUser = e => {
     e.preventDefault();
     const auth = firebase.auth();
-    var email = this.state.email;
-    var pass = this.state.password;
-
-    console.log("Email: " + userEmail);
-    console.log("Password: " + userPassword);
+    let email = this.state.email;
+    let pass = this.state.password;
 
     const promise = auth.createUserWithEmailAndPassword(email, pass);
     promise.catch(e => console.log(e.message));
@@ -84,6 +75,7 @@ class SignIn extends Component {
 
     return (
       <div className="main">
+        <h1>Sign In</h1>
         <div className="sign-up-container">
           <form>
             <input

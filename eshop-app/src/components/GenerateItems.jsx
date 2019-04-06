@@ -26,7 +26,7 @@ class GenerateItems extends Component {
     storeProducts = [];
 
     productsRef.on("child_added", snapshot => {
-      var product = snapshot.val();
+      let product = snapshot.val();
 
       if (storeProducts.length > 0) {
         if (storeProducts.productID !== product.productID) {

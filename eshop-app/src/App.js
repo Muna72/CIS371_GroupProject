@@ -4,6 +4,7 @@ import { Switch } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Shop from "./components/Shop";
 import Account from "./components/Account";
+import CreateAccount from "./components/CreateAccount";
 import SignIn from "./components/SignIn";
 import Cart from "./components/Cart";
 import Error from "./components/Error";
@@ -21,6 +22,7 @@ class App extends Component {
             <Route path="/Cart/" component={Cart} />
             <Route path="/Account/" component={Account} />
             <Route path="/SignIn/" component={SignIn} />
+            <Route path="/SignUp" component={CreateAccount} />
             <Route component={Error} />
           </Switch>
         </div>

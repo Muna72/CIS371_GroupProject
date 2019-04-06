@@ -145,6 +145,9 @@ class Navigation extends Component {
             <div className="menuItems">
               <div>
                 <li>
+                  <NavLink to="/SignUp/">Sign Up</NavLink>
+                </li>
+                <li>
                   <NavLink to="/SignIn/">Sign In</NavLink>
                 </li>
               </div>
