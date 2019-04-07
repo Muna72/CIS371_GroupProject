@@ -9,33 +9,36 @@ class CreateAccount extends Component {
           email: "",
           password: "",
           passRepeat: "",
+          isValidEmail: false,
+          isValidPaswword: false,
+          formValid: false,
           redirect: false
         };
-
-        this.signInUser = this.signInUser.bind(this);
-        this.createUser = this.createUser.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        //this.signInUser = this.signInUser.bind(this);
+        //this.createUser = this.createUser.bind(this);
+        //this.handleInputChange = this.handleInputChange.bind(this);
+        //this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
 
     componentWillUnmount() {
         this._isMounted = false;
       }
     
-    handleInputChange(event) {
-        this.setState({ email: event.target.value }, function() {
-            //userEmail = this.state.email;
-        });
+    handleInputChange = (e) => {
+      this.setState({ [e.target.name]: e.target.value });
     }
 
-    handlePasswordChange(event) {
-        this.setState({ password: event.target.value }, function() {
-            //userPassword = this.state.password;
-        });
+    validatePassword = (e) => {
+      this.handleInputChange(e);
+      this.isValidPassword = (this.password === this.passRepeat) ? true : false;
     }
+
 
     signUpUser = e => {
         e.preventDefault();
+        if (!this.isValidPassword) {
+          return;
+        }
         const auth = firebase.auth();
         let email = this.state.email;
         let pass = this.state.password;
@@ -80,33 +83,30 @@ class CreateAccount extends Component {
               type="email"
               className="field"
               id="email"
-              defaultValue={this.state.email}
               placeholder="Email"
               onChange={this.handleInputChange}
               autoComplete="email"
             />
-            <p className="errormsg" id="email_error_1">
+            <p className="errormsg" id="email-error-1">
               {this.state.error}
             </p>
             <input
               type="password"
               className="field"
               id="password"
-              defaultValue={this.state.password}
               placeholder="Password"
-              onChange={this.handlePasswordChange}
+              onChange={this.handleInputChange}
               autoComplete="current-password"
             />
             <input
               type="password"
               className="field"
               id="passRepeat"
-              defaultValue={this.state.passRepeat}
               placeholder="Repeat Password"
               onChange={this.handlePasswordChange}
             />
-            <p className="errormsg" id="password_error_1">
-              {this.state.error}
+            <p className="errormsg" id="password-error-1">
+              {() => { return (this.isValidPassword) ? "" : "Passwords must match"}}
             </p>
             <div className="formButtons">
               <button onClick={this.signInUser} className="formBtn signIn">
