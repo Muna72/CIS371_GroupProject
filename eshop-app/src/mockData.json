@@ -89,8 +89,7 @@
 			"userName": "Muna",
 			"password": "munapass1",
 			"shippingAddress": {
-				"streetNum": 123,
-				"streetName": "Crest Ln",
+				"streetAddress": "123 Crest Ln",
 				"city": "Portland",
 				"state": "Oregon",
 				"country": "United States",
@@ -102,12 +101,14 @@
 			],
 			"orders": [ 
 				{
+					"orderDate": "May 11, 2018",
 					"totalPrice": 24.99,
 					"productsInOrder": {
 						"CAMPING POTS COOKING SET": 24.99
 					}
 				},
 				{
+					"orderDate": "January 24, 2019",
 					"totalPrice": 475.9,
 					"productsInOrder": {
 					"CHECK PRINT SHIRT": 26,
@@ -123,8 +124,7 @@
 			"userName": "Kyle",
 			"password": "kylepass1",
 			"shippingAddress": {
-				"streetNum": 4790,
-				"streetName": "Rowe Road",
+				"streetAddress": "4790 Rowe Road",
 				"city": "Kansas City",
 				"state": "Kansas",
 				"country": "United States",
@@ -143,6 +143,7 @@
 			],
 			"orders": [ 
 				{
+				"orderDate": "January 21, 2019",
 				"totalPrice": 46.99,
 				"productsInOrder": {
 					"WHITE WOODEN STOOL": 46.99
@@ -156,8 +157,7 @@
 			"userName": "Trevor",
 			"password": "trevorpass1",
 			"shippingAddress": {
-				"streetNum": 3295,
-				"streetName": "Smokey Rd",
+				"streetAddress": "3295 Smokey Rd",
 				"city": "Atlanta",
 				"state": "Georgia",
 				"country": "United States",
