@@ -10,8 +10,8 @@ if (!firebase.apps.length) {
 
 var db = firebase.database();
 var rootRef = db.ref();
-rootRef.on('child_removed', signupRedirect);
-rootRef.on('child_changed', reloadData); //TODO don't need?
+//rootRef.on('child_removed', signupRedirect);
+//rootRef.on('child_changed', reloadData); //TODO don't need?
 
 class Account extends Component {
   constructor(props) {
@@ -27,21 +27,10 @@ class Account extends Component {
     this.setState({ redirect: true });
   };
 
-  findUser() {
-
-      /*var dbRef = rootRef.child('Node').orderByKey();
-      dbRef.on('value', snapshot => {
-          snapshot.forEach(childSnapshot => {
-              console.log(childSnapshot.key);
-              arrResult.push(childSnapshot.key);
-          }
-      }); */
-  }
-
   removeAccount() {
 
-      var answer = confirm("Are you sure you want to PERMENANTLY delete account and all user data?");
-
+      //var answer = confirm("Are you sure you want to PERMENANTLY delete account and all user data?");
+var answer = false;
       if(answer == true) {
 
           var emailValue = document.getElementById("email").value;
