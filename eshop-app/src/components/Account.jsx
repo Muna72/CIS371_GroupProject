@@ -14,8 +14,8 @@ rootRef.on('child_removed', signupRedirect);
 rootRef.on('child_changed', reloadData); //TODO don't need?
 
 class Account extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       redirect: false
     };
@@ -113,7 +113,7 @@ class Account extends Component {
               <h2>Account Information</h2>
               <form id="userInfoForm">
                   <label htmlFor="user name">User Name:</label>
-                  <input type="text" name="userName" id="userName" value={}/>
+                  <input type="text" name="userName" id="userName"/>
                   <label>First Name:</label>
                   <input type="text" name="firstName" id="firstName"/>
                   <label>Last Name:</label>
