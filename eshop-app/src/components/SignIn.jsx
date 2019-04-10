@@ -84,6 +84,7 @@ class SignIn extends Component {
 
     return (
       <div className="main">
+        <h1>Sign In</h1>
         <div className="sign-up-container">
           <form>
             <input
