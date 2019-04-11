@@ -19,10 +19,6 @@ class GenerateItems extends Component {
     const rootRef = firebase.database().ref(); // ref() points to root node without arguement
     const productsRef = rootRef.child("products");
 
-    this.setState({
-      products: null
-    });
-
     storeProducts = [];
 
     productsRef.on("child_added", snapshot => {

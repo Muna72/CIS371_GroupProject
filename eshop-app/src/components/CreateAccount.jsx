@@ -5,27 +5,33 @@ import * as firebase from "firebase";
 var userEmail = "";
 var userPassword = "";
 
-class SignIn extends Component {
+class CreateAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
-      redirect: false,
-      redirect_createAcc: false
+      email: "",
+      password: "",
+      redirect: false
     };
 
-    this.signInUser = this.signInUser.bind(this);
     this.createUser = this.createUser.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+
+    if (this._isMounted) {
+      this.setState({
+        email: this.props.location.state.email,
+        password: this.props.location.state.password
+      });
+    }
   }
 
   handleInputChange(event) {
@@ -40,7 +46,18 @@ class SignIn extends Component {
     });
   }
 
-  signInUser = e => {
+  // creates a customer account for them using their unique user id
+  // this can hold their cart, orders, info, etc.
+  writeUserData(user) {
+    firebase
+      .database()
+      .ref("customers/" + user.uid)
+      .set({
+        email: user.email
+      });
+  }
+
+  createUser = e => {
     e.preventDefault();
     const auth = firebase.auth();
     var email = this.state.email;
@@ -49,12 +66,20 @@ class SignIn extends Component {
     console.log("Email: " + userEmail);
     console.log("Password: " + userPassword);
 
-    const promise = auth.signInWithEmailAndPassword(email, pass);
+    const promise = auth.createUserWithEmailAndPassword(email, pass);
     promise.catch(e => console.log(e.message));
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        user = firebase.auth().currentUser;
+
+        // save a space for them in the realtime database
+        this.writeUserData(user);
+      }
+    });
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
-        // redirect to new page and update nav
         console.log(firebaseUser);
         if (this._isMounted) {
           this.setState({ redirect: true });
@@ -63,37 +88,9 @@ class SignIn extends Component {
     });
   };
 
-  createUser = e => {
-    e.preventDefault();
-    this.setState({ redirect_createAcc: true });
-  };
-
   render() {
     if (this.state.redirect) {
-      return (
-        <Redirect
-          push
-          to={{
-            pathname: "/",
-            state: {
-              user: this.state.user,
-              loggedIn: true
-            }
-          }}
-        />
-      );
-    }
-
-    if (this.state.redirect_createAcc) {
-      return (
-        <Redirect
-          push
-          to={{
-            pathname: "/CreateAccount/",
-            state: { email: this.state.email, password: this.state.password }
-          }}
-        />
-      );
+      return <Redirect push to="/" />;
     }
 
     return (
@@ -104,7 +101,7 @@ class SignIn extends Component {
               type="email"
               className="field"
               id="email"
-              defaultValue={this.state.email}
+              defaultValue={this.props.location.state.email}
               placeholder="Email"
               onChange={this.handleInputChange}
               autoComplete="email"
@@ -116,7 +113,7 @@ class SignIn extends Component {
               type="password"
               className="field"
               id="password"
-              defaultValue={this.state.password}
+              defaultValue={this.props.location.state.password}
               placeholder="Password"
               onChange={this.handlePasswordChange}
               autoComplete="current-password"
@@ -124,10 +121,19 @@ class SignIn extends Component {
             <p className="errormsg" id="password_error_1">
               {this.state.error}
             </p>
+            <input
+              type="password"
+              className="field"
+              id="repeat_password"
+              defaultValue=""
+              placeholder="Repeat Password"
+              onChange={this.handlePasswordChange}
+              autoComplete="current-password"
+            />
+            <p className="errormsg" id="password_error_1">
+              {this.state.error}
+            </p>
             <div className="formButtons">
-              <button onClick={this.signInUser} className="formBtn signIn">
-                Sign In
-              </button>
               <button
                 onClick={this.createUser}
                 className="formBtn createAccount"
@@ -142,4 +148,4 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn;
+export default CreateAccount;

@@ -8,8 +8,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-// remove global, update state (render invoked auto)
-
 var searching = false;
 
 const SearchBar = () => {
@@ -38,30 +36,36 @@ const Search = () => {
 };
 
 class Navigation extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
+      user: {},
       loggedIn: false
     };
   }
 
-  //fix me
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(
-      function(user) {
-        if (user) {
-          // fix me
-          this.setState({ loggedIn: true });
-        } else {
-          this.setState({ loggedIn: false });
-        }
-      }.bind(this)
-    );
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
-  // functional comppnenet are stateless, inherit from
-  // use if statements inside render to check state variables
-  //logged in nav
+  componentDidMount() {
+    this._isMounted = true;
+
+    if ((this._isMounted = true)) {
+      firebase.auth().onAuthStateChanged(
+        function(user) {
+          if (user) {
+            this.setState({ loggedIn: true });
+          } else {
+            this.setState({ loggedIn: false });
+          }
+        }.bind(this)
+      );
+    }
+  }
+
+  // rerenders on every click inside the nav
 
   render() {
     console.log("logged in state: " + this.state.loggedIn);
