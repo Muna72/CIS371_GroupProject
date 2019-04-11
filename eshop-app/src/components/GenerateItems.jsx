@@ -1,20 +1,74 @@
 import React, { Component } from "react";
 import * as firebase from "firebase";
+import { Redirect } from "react-router";
 import CurrencyFormat from "react-currency-format";
 
 var storeProducts = [];
 var items = null;
 
 class GenerateItems extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      products: []
+      redirect: false,
+      products: [],
+      user: {},
+      quantity: 1
     };
   }
 
-  // called after rendered to DOM
+  getCurrentUser = () => {
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser) {
+        this.setState({
+          user: firebase.auth().currentUser
+        });
+      }
+    });
+  };
+
+  writeUserData(user, productID, quantity) {
+    // get the current cart first as to not overwrite it
+
+    firebase
+      .database()
+      .ref("customers/" + user.uid)
+      .child("cart")
+      .update({
+        [productID]: parseInt(quantity, 10)
+      });
+  }
+
+  addToCart = (productID, quantity) => {
+    // if they are not logged in, go to the sign in page
+    if (this.state.user && Object.keys(this.state.user).length === 0) {
+      this.setState({ redirect: true });
+    } else {
+      // user is logged in. add the item to the cart.
+
+      this.writeUserData(this.state.user, productID, this.state.quantity);
+      this.resetQuantity();
+    }
+  };
+
+  resetQuantity() {
+    this.setState({ quantity: 1 });
+  }
+
+  // handle input changed.
+  handleInputChange = (e, name) => {
+    this.setState({
+      [name]: e.target.value
+    });
+  };
+
   componentDidMount() {
+    this._isMounted = true;
+
+    if (this._isMounted) {
+      this.getCurrentUser();
+    }
+
     // set up listeners and download data to be rendered to DOM
     const rootRef = firebase.database().ref(); // ref() points to root node without arguement
     const productsRef = rootRef.child("products");
@@ -39,14 +93,26 @@ class GenerateItems extends Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect push to="/SignIn/" />;
+    }
+
     items = storeProducts.map(product => (
       <div key={product.productID} className="storeItem">
         <div className="thumbnailContainer">
           <img src={product.imgUrl} className="thumbnail" alt="" />
         </div>
         <div className="itemActions">
-          <input type="number" min="0" max={product.onHand} />
-          <button>Add to Cart</button>
+          <input
+            type="number"
+            min="0"
+            max={product.onHand}
+            value={this.state.quantity}
+            onChange={e => this.handleInputChange(e, "quantity")}
+          />
+          <button onClick={() => this.addToCart(product.productID, 1)}>
+            Add to Cart
+          </button>
           <p className="quantityRemaining">
             Quantity Remaining: {product.onHand}
           </p>
