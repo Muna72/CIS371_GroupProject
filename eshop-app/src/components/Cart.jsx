@@ -76,15 +76,41 @@ class Cart extends Component {
 
   removeFromCart = productID => {
     // if they are not logged in, go to the sign in page
-    console.log("remove " + productID);
+    // keep the reference to what THIS is
+    var that = this;
+
+    var adaRef = firebase
+      .database()
+      .ref("customers/" + this.state.user.uid + "/cart/" + productID);
+    adaRef
+      .remove()
+      .then(function() {
+        // successfully removed
+
+        // now update the cart list
+        var newCart = [];
+        for (var i = 0; i < cartItems.length; i++) {
+          if (cartItems[i][0] !== productID) {
+            newCart.push(cartItems[i]);
+          }
+        }
+
+        cartItems = newCart;
+
+        // update the state so that the cart refreshes
+        that.setState({
+          cartItems: cartItems
+        });
+      })
+      .catch(function(error) {
+        console.log("Remove failed: " + error.message);
+      });
   };
 
   render() {
     if (this.state.redirect) {
       return <Redirect push to="/SignIn/" />;
     }
-
-    console.log("CART ITEMS: " + cartItems);
 
     items = cartItems.map(product => (
       <tr key={product[0]}>
