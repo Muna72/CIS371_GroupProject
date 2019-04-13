@@ -53,7 +53,14 @@ class CreateAccount extends Component {
       .database()
       .ref("customers/" + user.uid)
       .set({
-        email: user.email
+        email: user.email,
+        shippingAddress: {
+          streetAddress: "",
+          city: "",
+          state: "",
+          zip: "",
+          country: ""
+        }
       });
   }
 
