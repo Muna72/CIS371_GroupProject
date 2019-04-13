@@ -5,7 +5,7 @@ import CurrencyFormat from "react-currency-format";
 
 var cartItems = [];
 var correspondingProduct = {};
-var items = null;
+var items = new Map();
 
 class Cart extends Component {
   constructor(props) {
@@ -96,6 +96,8 @@ class Cart extends Component {
         }
 
         cartItems = newCart;
+        newCart = [];
+        correspondingProduct = {};
 
         // update the state so that the cart refreshes
         that.setState({
@@ -107,10 +109,39 @@ class Cart extends Component {
       });
   };
 
+  emptyCart = () => {
+    // if they are not logged in, go to the sign in page
+    // keep the reference to what THIS is
+    var that = this;
+
+    var adaRef = firebase
+      .database()
+      .ref("customers/" + this.state.user.uid + "/cart/");
+    adaRef
+      .remove()
+      .then(function() {
+        // successfully removed entire cart
+
+        // now update the cart list
+        cartItems = [];
+        correspondingProduct = {};
+
+        // update the state so that the cart refreshes
+        that.setState({
+          cartItems: []
+        });
+      })
+      .catch(function(error) {
+        console.log("Remove all failed: " + error.message);
+      });
+  };
+
   render() {
     if (this.state.redirect) {
       return <Redirect push to="/SignIn/" />;
     }
+
+    items.clear();
 
     items = cartItems.map(product => (
       <tr key={product[0]}>
@@ -158,7 +189,12 @@ class Cart extends Component {
             {items}
           </tbody>
         </table>
-        <button className="checkoutBtn emptyCartBtn">Empty Cart</button>
+        <button
+          onClick={() => this.emptyCart()}
+          className="checkoutBtn emptyCartBtn"
+        >
+          Empty Cart
+        </button>
       </div>
     );
   }
