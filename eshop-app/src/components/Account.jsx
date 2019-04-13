@@ -53,7 +53,7 @@ class Account extends Component {
 
       if(answer == true) {
 
-          let childRef = rootRef.child('customers').child(this.state.user.uid).child("email");
+          let childRef = rootRef.child('customers').child(this.state.user.uid);
           childRef.remove();
 
           let u = firebase.auth().currentUser;
@@ -61,7 +61,7 @@ class Account extends Component {
           u.delete().then(function() {
               alert("Account Sucessfully deleted");
           }).catch(function(error) {
-              alert("An error occured - action aborted");
+              alert("An error occured - action aborted" + error);
           });
 
           this.setState({ redirect: true });
@@ -86,28 +86,6 @@ class Account extends Component {
             childToUpdate.shippingAddress.country = this.state.country;
             childToUpdate.shippingAddress.state = this.state.state;
             childToUpdate.shippingAddress.zip = this.state.zip;
-  }
-
-  changePassword() {
-
-          if (this.state.currentPassword == this.state.user.password) {
-              if (this.state.newPassword == this.state.confirmPassword) {
-
-                  let u = firebase.auth().currentUser;
-
-                  u.updatePassword(this.state.newPassword).then(function () {
-                      alert("Password updated successfully");
-                  }).catch(function (error) {
-                      alert("An error occured - action aborted");
-                  });
-
-              } else {
-                  alert("New password fields do not match. Please re-enter new password.");
-              }
-          } else {
-              alert("Entry for current password is incorrect");
-          }
-
   }
 
   render() {
@@ -143,14 +121,6 @@ class Account extends Component {
                   <label htmlFor="country">Country:</label>
                   <input type="text" id="country" size="35" value={this.state.user.shippingAddress} onChange={e => this.handleInputChange(e, "country")}/><br />
                   <input type="submit" className="submit" value="Submit Changes" onClick={() => { this.updateInfo()}}/>
-                  <h3 className="acctTitles">Change Your Password</h3>
-                  <label htmlFor="password">Current Password:</label>
-                  <input type="text" id="password" onChange={e => this.handleInputChange(e, "currentPassword")}/><br />
-                  <label htmlFor="newPassword">New Password:</label>
-                  <input type="text" id="newPassword" onChange={e => this.handleInputChange(e, "newPassword")}/><br />
-                  <label htmlFor="confirmPassword">Confirm New Password:</label>
-                  <input type="text" id="confirmPassword" onChange={e => this.handleInputChange(e, "confirmPassword")}/><br />
-                  <input type="submit" value="Update" className="submit" onclick={() => { this.changePassword()}} />
                   <h3 className="acctTitles">Delete Account</h3>
                   <input type="submit" value="Delete" className="submit" onClick={() => { this.removeAccount()}}/>
               </div>
