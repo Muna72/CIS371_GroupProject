@@ -3,6 +3,7 @@ import * as firebase from "firebase";
 import CurrencyFormat from "react-currency-format";
 
 var accountOrders = [];
+var orders = null;
 
 class GenerateOrders extends Component {
 
@@ -14,11 +15,34 @@ class GenerateOrders extends Component {
         };
     }
 
+    getCurrentUser = () => {
+        firebase.auth().onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) {
+                this.setState({
+                    user: firebase.auth().currentUser
+                });
+            }
+        });
+    };
+
+    handleOnClick = () => {
+        // some action...
+        // then redirect
+        this.setState({ redirect: true });
+    };
+
     // called after rendered to DOM
     componentDidMount() {
+
+        this._isMounted = true;
+
+        if (this._isMounted) {
+            this.getCurrentUser();
+        }
+
         // set up listeners and download data to be rendered to DOM
-        const rootRef = firebase.database().ref(); // ref() points to root node without arguement
-        const ordersRef = rootRef.child("customers").orderByChild('email').equalTo(emailValue); //TODO need emailValue
+        const rootRef = firebase.database().ref();
+        const ordersRef = rootRef.child("customers").child(this.state.user.uid).child("orders");
 
         this.setState({
             orders: null
@@ -40,7 +64,7 @@ class GenerateOrders extends Component {
     }
 
     render() {
-        accountOrders.map(order => (
+        orders = accountOrders.map(order => (
             <div className="accountOrder">
                 <div className="orderDetails">
                     <p>

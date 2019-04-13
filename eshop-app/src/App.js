@@ -4,6 +4,7 @@ import { Switch } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Shop from "./components/Shop";
 import Account from "./components/Account";
+import Orders from "./components/Orders";
 import SignIn from "./components/SignIn";
 import CreateAccount from "./components/CreateAccount";
 import Cart from "./components/Cart";
@@ -21,6 +22,7 @@ class App extends Component {
             <Route path="/" exact component={Shop} />
             <Route path="/Cart/" component={Cart} />
             <Route path="/Account/" component={Account} />
+            <Route path="/Orders/" component={Orders} />
             <Route path="/SignIn/" component={SignIn} />
             <Route path="/CreateAccount/" component={CreateAccount} />
             <Route component={Error} />
