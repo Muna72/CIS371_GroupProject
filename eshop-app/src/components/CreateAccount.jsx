@@ -54,6 +54,7 @@ class CreateAccount extends Component {
       .ref("customers/" + user.uid)
       .set({
         email: user.email,
+        name: "",
         shippingAddress: {
           streetAddress: "",
           city: "",

@@ -13,6 +13,13 @@ code {
     monospace;
 }
 
+nav {
+  position: fixed;
+  width: 100%;
+  margin-top: 0;
+  top: 0;
+}
+
 nav > ul {
   list-style-type: none;
   margin: 0;
@@ -94,7 +101,7 @@ nav a {
 }
 
 .main {
-  margin: 5px;
+  margin-top: 61.45px;
 }
 
 table {
@@ -241,7 +248,7 @@ th {
 }
 
 .submit {
-    margin-left: 30px;
+  margin-left: 30px;
 }
 
 /* The side navigation menu */
@@ -287,4 +294,3 @@ th {
 .acctTitles {
   margin-left: -80px;
 }
-

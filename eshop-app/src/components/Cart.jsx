@@ -118,7 +118,6 @@ class Cart extends Component {
 
     return (
       <div className="main">
-        <h2>Shopping Cart</h2>
         <button className="checkoutBtn">Proceed to Checkout</button>
         <table>
           <tbody>
