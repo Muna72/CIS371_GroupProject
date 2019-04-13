@@ -27,26 +27,24 @@ class GenerateItems extends Component {
     });
   };
 
-  writeUserData(user, productID, quantity) {
-    // get the current cart first as to not overwrite it
-
+  writeUserData(user, productKey, quantity) {
     firebase
       .database()
       .ref("customers/" + user.uid)
       .child("cart")
       .update({
-        [productID]: parseInt(quantity, 10)
+        [productKey]: parseInt(quantity, 10)
       });
   }
 
-  addToCart = (productID, quantity) => {
+  addToCart = (productKey, quantity) => {
     // if they are not logged in, go to the sign in page
     if (this.state.user && Object.keys(this.state.user).length === 0) {
       this.setState({ redirect: true });
     } else {
       // user is logged in. add the item to the cart.
 
-      this.writeUserData(this.state.user, productID, this.state.quantity);
+      this.writeUserData(this.state.user, productKey, quantity);
       this.resetQuantity();
     }
   };
@@ -78,13 +76,13 @@ class GenerateItems extends Component {
     productsRef.on("child_added", snapshot => {
       var product = snapshot.val();
 
-      if (storeProducts.length > 0) {
-        if (storeProducts.productID !== product.productID) {
-          storeProducts.push(product);
-        }
-      } else {
-        storeProducts.push(product);
-      }
+      // give each object a temporary element containing their key
+      product.key = snapshot.key;
+
+      // fix me: you need the key here.
+      storeProducts.push(product);
+
+      // console.log(storeProducts);
 
       this.setState({
         products: storeProducts
@@ -98,7 +96,7 @@ class GenerateItems extends Component {
     }
 
     items = storeProducts.map(product => (
-      <div key={product.productID} className="storeItem">
+      <div key={product.key} className="storeItem">
         <div className="thumbnailContainer">
           <img src={product.imgUrl} className="thumbnail" alt="" />
         </div>
@@ -110,7 +108,10 @@ class GenerateItems extends Component {
             value={this.state.quantity}
             onChange={e => this.handleInputChange(e, "quantity")}
           />
-          <button onClick={() => this.addToCart(product.productID, 1)}>
+
+          <button
+            onClick={() => this.addToCart(product.key, this.state.quantity)}
+          >
             Add to Cart
           </button>
           <p className="quantityRemaining">
