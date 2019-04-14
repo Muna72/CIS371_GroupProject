@@ -6,6 +6,7 @@ import CurrencyFormat from "react-currency-format";
 var cartItems = [];
 var correspondingProduct = {};
 var items = new Map();
+var orderTotal = 0.0;
 
 class Cart extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class Cart extends Component {
     this.state = {
       redirect: false,
       user: {},
-      cartItems: []
+      cartItems: [],
+      orderTotal: 0.0
     };
   }
 
@@ -136,13 +138,30 @@ class Cart extends Component {
       });
   };
 
+  calculateOrderTotal = () => {
+    console.log("Calculating order total.");
+    // loop through all cart items
+    // fix me: not updating properly when an item is removed
+
+    var numOfItems = cartItems.length;
+    for (var i = 0; i < numOfItems; i++) {
+      let price = cartItems[i][2].price;
+      let quantity = parseInt(cartItems[i][1]);
+      orderTotal += price * quantity;
+    }
+  };
+
   render() {
     if (this.state.redirect) {
       return <Redirect push to="/SignIn/" />;
     }
 
-    items.clear();
+    // recalculate the order total every time it renders
+    this.calculateOrderTotal();
 
+    // ERROR: keys are showing as duplicates if a cart item is deleted
+    // and added back in without refreshing the page
+    // Also, add a total as the last row.
     items = cartItems.map(product => (
       <tr key={product[0]}>
         <td>
@@ -187,14 +206,37 @@ class Cart extends Component {
               <th>Action</th>
             </tr>
             {items}
+            <tr>
+              <td />
+              <td />
+              <td />
+              <td />
+              <td>
+                <p>
+                  <b>Order Total:</b>
+                </p>
+                <CurrencyFormat
+                  value={orderTotal}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"$"}
+                  decimalScale={2}
+                  fixedDecimalScale={true}
+                  renderText={value => <div>{value}</div>}
+                />
+              </td>
+              <td>
+                {" "}
+                <button
+                  onClick={() => this.emptyCart()}
+                  className="checkoutBtn emptyCartBtn"
+                >
+                  Empty Cart
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
-        <button
-          onClick={() => this.emptyCart()}
-          className="checkoutBtn emptyCartBtn"
-        >
-          Empty Cart
-        </button>
       </div>
     );
   }

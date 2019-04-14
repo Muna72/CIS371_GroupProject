@@ -1,19 +1,23 @@
 import React, { Component } from "react";
 import * as firebase from "firebase";
 import { Redirect } from "react-router";
-import { withRouter } from "react-router-dom";
 
 var db = firebase.database();
 var rootRef = db.ref();
-var childToUpdate;
-//rootRef.on('child_changed', reloadData);
 
 class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {
       redirect: false,
-      user: {}
+      user: {},
+      name: "",
+      shippingAddress: {},
+      city: "",
+      country: "",
+      state: "",
+      streetAddress: "",
+      zip: ""
     };
   }
 
@@ -23,6 +27,35 @@ class Account extends Component {
         this.setState({
           user: firebase.auth().currentUser
         });
+      }
+    });
+  };
+
+  getUserInfo = () => {
+    // need to get their name and shipping address
+    var that = this;
+
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser) {
+        console.log("Getting user info for " + this.state.user.email);
+
+        return firebase
+          .database()
+          .ref("/customers/" + this.state.user.uid)
+          .once("value")
+          .then(function(snapshot) {
+            var customerInfo = snapshot.val();
+            that.setState({
+              name: customerInfo.name,
+              shippingAddress: customerInfo.shippingAddress,
+              city: customerInfo.shippingAddress.city,
+              country: customerInfo.shippingAddress.country,
+              state: customerInfo.shippingAddress.state,
+              streetAddress: customerInfo.shippingAddress.streetAddress,
+              zip: customerInfo.shippingAddress.zip
+            });
+            console.log(customerInfo);
+          });
       }
     });
   };
@@ -38,6 +71,9 @@ class Account extends Component {
 
     if (this._isMounted) {
       this.getCurrentUser();
+      if (this.state.user.email !== "") {
+        this.getUserInfo();
+      }
     }
   }
 
@@ -52,7 +88,7 @@ class Account extends Component {
       "Are you sure you want to PERMENANTLY delete account and all user data?"
     );
 
-    if (answer == true) {
+    if (answer === true) {
       let childRef = rootRef.child("customers").child(this.state.user.uid);
       childRef.remove();
 
@@ -77,39 +113,37 @@ class Account extends Component {
   }
 
   updateInfo() {
+    console.log("updating info for ", this.state.user.email);
 
-    var childToUpdate = rootRef.child("customers").child(this.state.user.uid);
-     /* var e = this.state.user.email;
-      rootRef.child("customers").orderByChild(this.state.user.uid).on("value", function (snapshot) {
-          snapshot.forEach(function (child) {
-              if(child.val().email == e) {
-                  childToUpdate = child.val();
-              }
-          });
-      }); */
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    var updates = {};
+    updates["/customers/" + this.state.user.uid + "/name/"] = this.state.name;
+    updates[
+      "/customers/" + this.state.user.uid + "/shippingAddress/city"
+    ] = this.state.city;
+    updates[
+      "/customers/" + this.state.user.uid + "/shippingAddress/country"
+    ] = this.state.country;
+    updates[
+      "/customers/" + this.state.user.uid + "/shippingAddress/state"
+    ] = this.state.state;
+    updates[
+      "/customers/" + this.state.user.uid + "/shippingAddress/streetAddress"
+    ] = this.state.streetAddress;
+    updates[
+      "/customers/" + this.state.user.uid + "/shippingAddress/zip"
+    ] = this.state.zip;
 
-      if(this.state.email) {
-          let u = firebase.auth().currentUser;
-
-          u.updateEmail(this.state.email)
-              .then(function () {
-                  // Update successful.
-              })
-              .catch(function (error) {
-                  // An error happened.
-              });
-      }
-
-    childToUpdate.name = this.state.name;
-    childToUpdate.shippingAddress.streetAddress = this.state.streetAddress;
-    childToUpdate.shippingAddress.city = this.state.city;
-    childToUpdate.shippingAddress.country = this.state.country;
-    childToUpdate.shippingAddress.state = this.state.state;
-    childToUpdate.shippingAddress.zip = this.state.zip;
+    console.log(
+      firebase
+        .database()
+        .ref()
+        .update(updates)
+    );
   }
 
   changePassword() {
-    if (this.state.newPassword == this.state.confirmPassword) {
+    if (this.state.newPassword === this.state.confirmPassword) {
       let u = firebase.auth().currentUser;
 
       let credentials = firebase.auth.EmailAuthProvider.credential(
@@ -150,17 +184,8 @@ class Account extends Component {
             type="text"
             id="name"
             size="35"
-            defaultValue={this.state.user.name}
-            onChange={e => this.handleInputChange(e, "fullName")}
-          />
-          <br />
-          <label htmlFor="email">Email:</label>
-          <input
-            type="text"
-            id="email"
-            size="35"
-            defaultValue={this.state.user.email}
-            onChange={e => this.handleInputChange(e, "email")}
+            defaultValue={this.state.name}
+            onChange={e => this.handleInputChange(e, "name")}
           />
           <br />
           <label htmlFor="address">Street Address:</label>
@@ -168,8 +193,8 @@ class Account extends Component {
             type="text"
             id="address"
             size="35"
-            defaultValue={this.state.user.shippingAddress}
-            onChange={e => this.handleInputChange(e, "address")}
+            defaultValue={this.state.shippingAddress.streetAddress}
+            onChange={e => this.handleInputChange(e, "streetAddress")}
           />
           <br />
           <label htmlFor="city">City:</label>
@@ -177,7 +202,7 @@ class Account extends Component {
             type="text"
             id="city"
             size="35"
-            defaultValue={this.state.user.shippingAddress}
+            defaultValue={this.state.shippingAddress.city}
             onChange={e => this.handleInputChange(e, "city")}
           />
           <br />
@@ -186,7 +211,7 @@ class Account extends Component {
             type="text"
             id="state"
             size="35"
-            defaultValue={this.state.user.shippingAddress}
+            defaultValue={this.state.shippingAddress.state}
             onChange={e => this.handleInputChange(e, "state")}
           />
           <br />
@@ -195,7 +220,7 @@ class Account extends Component {
             type="text"
             id="zip"
             size="35"
-            defaultValue={this.state.user.shippingAddress}
+            defaultValue={this.state.shippingAddress.zip}
             onChange={e => this.handleInputChange(e, "zip")}
           />
           <br />
@@ -204,7 +229,7 @@ class Account extends Component {
             type="text"
             id="country"
             size="35"
-            defaultValue={this.state.user.shippingAddress}
+            defaultValue={this.state.shippingAddress.country}
             onChange={e => this.handleInputChange(e, "country")}
           />
           <br />
@@ -260,7 +285,7 @@ class Account extends Component {
           <a href="/Orders">My Orders</a>
           <br />
           <a href="/Cart">Current Cart</a>
-           <p onClick={this.handleOnClick}>Logout</p>
+          <p onClick={this.handleOnClick}>Logout</p>
           <br />
         </div>
       </div>
