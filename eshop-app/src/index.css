@@ -265,7 +265,7 @@ th {
   transition: 0.5s;
 }
 
-.sidenav a {
+.sidenav a, .sidenav p {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
@@ -273,6 +273,10 @@ th {
   color: #fff;
   display: block;
   transition: 0.3s;
+}
+
+.sidenav p {
+  cursor:pointer;
 }
 
 .sidenav a:hover {

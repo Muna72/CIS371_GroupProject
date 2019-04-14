@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 
 var db = firebase.database();
 var rootRef = db.ref();
+var childToUpdate;
 //rootRef.on('child_changed', reloadData);
 
 class Account extends Component {
@@ -76,17 +77,28 @@ class Account extends Component {
   }
 
   updateInfo() {
+
     var childToUpdate = rootRef.child("customers").child(this.state.user.uid);
+     /* var e = this.state.user.email;
+      rootRef.child("customers").orderByChild(this.state.user.uid).on("value", function (snapshot) {
+          snapshot.forEach(function (child) {
+              if(child.val().email == e) {
+                  childToUpdate = child.val();
+              }
+          });
+      }); */
 
-    let u = firebase.auth().currentUser;
+      if(this.state.email) {
+          let u = firebase.auth().currentUser;
 
-    u.updateEmail(this.state.email)
-      .then(function() {
-        // Update successful.
-      })
-      .catch(function(error) {
-        // An error happened.
-      });
+          u.updateEmail(this.state.email)
+              .then(function () {
+                  // Update successful.
+              })
+              .catch(function (error) {
+                  // An error happened.
+              });
+      }
 
     childToUpdate.name = this.state.name;
     childToUpdate.shippingAddress.streetAddress = this.state.streetAddress;
@@ -128,8 +140,6 @@ class Account extends Component {
 
       return <Redirect push to="/" />;
     }
-    console.log(this.state.user.email);
-
     return (
       <div className="main">
         <h1 id="welcome">Welcome, {this.state.user.email}!</h1>
@@ -247,12 +257,12 @@ class Account extends Component {
           />
         </div>
         <div className="sidenav">
-          <a href="/orders">My Orders</a>
+          <a href="/Orders">My Orders</a>
           <br />
-          <a href="/cart">Current Cart</a>
+          <a href="/Cart">Current Cart</a>
+           <p onClick={this.handleOnClick}>Logout</p>
           <br />
         </div>
-        <p onClick={this.handleOnClick}>Logout</p>
       </div>
     );
   }
