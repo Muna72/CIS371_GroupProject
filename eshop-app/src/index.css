@@ -298,3 +298,22 @@ th {
 .acctTitles {
   margin-left: -80px;
 }
+
+#pastOrders {
+  margin-left: 40px;
+  margin-top: 100px;
+  font-size: 50px;
+}
+
+#ordersNote {
+  margin-left: 150px;
+  margin-top: 150px;
+}
+
+.orderDetails {
+  border: 2px solid black;
+  width: 50%;
+  margin-left: 40px;
+  margin-top: 10px;
+  font-weight: bold;
+}

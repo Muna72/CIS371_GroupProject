@@ -14,7 +14,7 @@ class Orders extends Component {
     render() {
         return (
             <div className="main">
-                <h2>Past Orders</h2>
+                <h2 id="pastOrders">Past Orders</h2>
                 <GenerateOrders />
             </div>
         );

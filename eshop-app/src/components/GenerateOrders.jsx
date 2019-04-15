@@ -18,9 +18,12 @@ class GenerateOrders extends Component {
     getCurrentUser = () => {
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
-                this.setState({
-                    user: firebase.auth().currentUser
-                });
+                this.setState(
+                    {
+                        user: firebase.auth().currentUser
+                    },
+                    this.stateIsSet
+                );
             }
         });
     };
@@ -40,55 +43,66 @@ class GenerateOrders extends Component {
             this.getCurrentUser();
         }
 
-        // set up listeners and download data to be rendered to DOM
-        const rootRef = firebase.database().ref();
-        const ordersRef = rootRef.child("customers").child(this.state.user.uid).child("orders");
-
         this.setState({
             orders: null
         });
 
         accountOrders = [];
 
+    }
+
+    stateIsSet = () => {
+        // fetch the current items in the cart
+        const rootRef = firebase.database().ref();
+        const ordersRef = rootRef
+            .child("customers")
+            .child(this.state.user.uid)
+            .child("orders");
+
+
         ordersRef.on("child_added", snapshot => {
             var order = snapshot.val();
 
-            if (accountOrders.length > 0) {
                 accountOrders.push(order);
-            }
 
             this.setState({
                 orders: accountOrders
             });
         });
-    }
+    };
 
     render() {
-        orders = accountOrders.map(order => (
-            <div className="accountOrder">
-                <div className="orderDetails">
-                    <p>
-                        <b>Purchase Order on {order.date}</b>
-                    </p>
-                    <ul style="list-style-type:none;">
-                        Object.keys({order.productsInOrder}).map(product, key => (
-                        return '<li>' + product + product[key] + '</li>';
-                        ));
-                    </ul>
-                    <CurrencyFormat
-                        value={order.totalPrice}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        prefix={"$"}
-                        decimalScale={2}
-                        fixedDecimalScale={true}
-                        renderText={value => <div>{value}</div>}
-                    />
+        if(accountOrders.length > 0) {
+            orders = accountOrders.map(order => (
+                <div className="accountOrder">
+                    <div className="orderDetails">
+                        <p>
+                            <b>Purchase Order on {order.orderDate}</b>
+                        </p>
+                        <ul style={{listStyleType: "none"}}>
+                            {Object.keys(order.productsInOrder).map(product =>
+                            <li key={product}>{product}: ${order.productsInOrder[product]}<br /><br /></li>
+                        )}
+                        </ul>
+                        <div id="price">
+                        <CurrencyFormat
+                            value={order.totalPrice}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            prefix={"$"}
+                            decimalScale={2}
+                            fixedDecimalScale={true}
+                            renderText={value => <div>Total Order Price: {value}</div>}
+                        />
+                        </div>
+                    </div>
                 </div>
-            </div>
-        ));
+            ));
 
-        return <div>{orders}</div>;
+            return <div>{orders}</div>;
+        } else {
+            return <div><h2 id="ordersNote">You have no past orders yet</h2></div>
+        }
     }
 }
 
