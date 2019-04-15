@@ -27,6 +27,19 @@ class Cart extends Component {
     }
   }
 
+  getCurrentUser = () => {
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser) {
+        this.setState(
+          {
+            user: firebase.auth().currentUser
+          },
+          this.stateIsSet
+        );
+      }
+    });
+  };
+
   stateIsSet = () => {
     // fetch the current items in the cart
     const rootRef = firebase.database().ref();
@@ -56,23 +69,15 @@ class Cart extends Component {
 
           cartItems.push([productKey, productQuantity, correspondingProduct]);
 
-          that.setState({
-            cartItems: cartItems
-          });
-        });
-    });
-  };
+          console.log(cartItems);
 
-  getCurrentUser = () => {
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-        this.setState(
-          {
-            user: firebase.auth().currentUser
-          },
-          this.stateIsSet
-        );
-      }
+          that.setState(
+            {
+              cartItems: cartItems
+            },
+            that.calculateOrderTotal()
+          );
+        });
     });
   };
 
@@ -102,9 +107,12 @@ class Cart extends Component {
         correspondingProduct = {};
 
         // update the state so that the cart refreshes
-        that.setState({
-          cartItems: cartItems
-        });
+        that.setState(
+          {
+            cartItems: cartItems
+          },
+          that.calculateOrderTotal
+        );
       })
       .catch(function(error) {
         console.log("Remove failed: " + error.message);
@@ -129,9 +137,12 @@ class Cart extends Component {
         correspondingProduct = {};
 
         // update the state so that the cart refreshes
-        that.setState({
-          cartItems: []
-        });
+        that.setState(
+          {
+            cartItems: []
+          },
+          that.calculateOrderTotal
+        );
       })
       .catch(function(error) {
         console.log("Remove all failed: " + error.message);
@@ -141,7 +152,8 @@ class Cart extends Component {
   calculateOrderTotal = () => {
     console.log("Calculating order total.");
     // loop through all cart items
-    // fix me: not updating properly when an item is removed
+    console.log(cartItems);
+    orderTotal = 0;
 
     var numOfItems = cartItems.length;
     for (var i = 0; i < numOfItems; i++) {
@@ -149,15 +161,16 @@ class Cart extends Component {
       let quantity = parseInt(cartItems[i][1]);
       orderTotal += price * quantity;
     }
+
+    this.setState({
+      orderTotal: orderTotal
+    });
   };
 
   render() {
     if (this.state.redirect) {
       return <Redirect push to="/SignIn/" />;
     }
-
-    // recalculate the order total every time it renders
-    this.calculateOrderTotal();
 
     // ERROR: keys are showing as duplicates if a cart item is deleted
     // and added back in without refreshing the page
@@ -216,7 +229,7 @@ class Cart extends Component {
                   <b>Order Total:</b>
                 </p>
                 <CurrencyFormat
-                  value={orderTotal}
+                  value={this.state.orderTotal}
                   displayType={"text"}
                   thousandSeparator={true}
                   prefix={"$"}
