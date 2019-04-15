@@ -61,7 +61,8 @@ class CreateAccount extends Component {
           state: "",
           zip: "",
           country: ""
-        }
+        },
+        orders: []
       });
   }
 
