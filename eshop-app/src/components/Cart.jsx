@@ -7,6 +7,7 @@ var cartItems = [];
 var correspondingProduct = {};
 var items = new Map();
 var orderTotal = 0.0;
+var newOrder = {};
 
 class Cart extends Component {
   constructor(props) {
@@ -167,6 +168,48 @@ class Cart extends Component {
     });
   };
 
+  getCurrentOrders = () => {
+    // need to get their name and shipping address
+    var that = this;
+
+    firebase
+      .database()
+      .ref("/customers/" + this.state.user.uid)
+      .once("value")
+      .then(function(snapshot) {
+        var customerInfo = snapshot.val();
+        that.setState({
+          orders: customerInfo.orders
+        });
+        console.log(customerInfo);
+      });
+  };
+
+  createNewOrder() {
+    newOrder = {
+      orderDate: new Date(),
+      productsInOrder: cartItems,
+      totalPrice: this.state.orderTotal
+    };
+  }
+
+  addOrderToAccount = () => {
+    this.getCurrentOrders();
+    this.state.orders.append(this.createNewOrder());
+
+    var updates = {};
+    updates[
+      "/customers/" + this.state.user.uid + "/orders/"
+    ] = this.state.orders;
+
+    firebase
+      .database()
+      .ref()
+      .update(updates);
+
+    alert("Order completed successfully. Thank you for your business!");
+  };
+
   render() {
     if (this.state.redirect) {
       return <Redirect push to="/SignIn/" />;
@@ -207,7 +250,9 @@ class Cart extends Component {
 
     return (
       <div className="main">
-        <button className="checkoutBtn">Proceed to Checkout</button>
+        <button className="checkoutBtn" onClick={this.addOrderToAccount}>
+          Proceed to Checkout
+        </button>
         <table>
           <tbody>
             <tr>
