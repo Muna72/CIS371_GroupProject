@@ -16,7 +16,8 @@ class Cart extends Component {
       redirect: false,
       user: {},
       cartItems: [],
-      orderTotal: 0.0
+      orderTotal: 0.0,
+      orders: []
     };
   }
 
@@ -168,47 +169,52 @@ class Cart extends Component {
     });
   };
 
-  getCurrentOrders = () => {
-    // need to get their name and shipping address
-    var that = this;
+    getCurrentOrders = () => {
+        // need to get their name and shipping address
+        var that = this;
 
-    firebase
-      .database()
-      .ref("/customers/" + this.state.user.uid)
-      .once("value")
-      .then(function(snapshot) {
-        var customerInfo = snapshot.val();
-        that.setState({
-          orders: customerInfo.orders
-        });
-        console.log(customerInfo);
-      });
-  };
+        firebase
+            .database()
+            .ref("/customers/" + this.state.user.uid)
+            .once("value")
+            .then(function(snapshot) {
+                console.log(snapshot.val());
+                var customerInfo = snapshot.val();
+                console.log(customerInfo.orders);
+                that.setState({
+                    orders: customerInfo.orders
+                });
+                console.log(customerInfo);
+            });
 
-  createNewOrder() {
-    newOrder = {
-      orderDate: new Date(),
-      productsInOrder: cartItems,
-      totalPrice: this.state.orderTotal
     };
-  }
 
-  addOrderToAccount = () => {
-    this.getCurrentOrders();
-    this.state.orders.append(this.createNewOrder());
+    createNewOrder() {
 
-    var updates = {};
-    updates[
-      "/customers/" + this.state.user.uid + "/orders/"
-    ] = this.state.orders;
+        newOrder = {
+            orderDate: new Date(),
+            productsInOrder: cartItems,
+            totalPrice: this.state.orderTotal
+        }
 
-    firebase
-      .database()
-      .ref()
-      .update(updates);
+        return newOrder;
+    }
 
-    alert("Order completed successfully. Thank you for your business!");
-  };
+    addOrderToAccount = () => {
+
+        this.getCurrentOrders();
+        this.state.orders.push(this.createNewOrder());
+
+        var updates = {};
+        updates["/customers/" + this.state.user.uid + "/orders/"] = this.state.orders;
+
+        firebase
+            .database()
+            .ref()
+            .update(updates)
+
+        alert("Order completed successfully. Thank you for your business!");
+    };
 
   render() {
     if (this.state.redirect) {
@@ -250,9 +256,7 @@ class Cart extends Component {
 
     return (
       <div className="main">
-        <button className="checkoutBtn" onClick={this.addOrderToAccount}>
-          Proceed to Checkout
-        </button>
+        <button className="checkoutBtn" onClick={() => this.addOrderToAccount()}>Proceed to Checkout</button>
         <table>
           <tbody>
             <tr>
