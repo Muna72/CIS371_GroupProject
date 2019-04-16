@@ -11,14 +11,14 @@ import GenerateOrders from "./GenerateOrders";
 }; */
 
 class Orders extends Component {
-    render() {
-        return (
-            <div className="main">
-                <h2 id="pastOrders">Past Orders</h2>
-                <GenerateOrders />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className="main">
+        <h2 id="pastOrders">Order History</h2>
+        <GenerateOrders />
+      </div>
+    );
+  }
 }
 
 export default Orders;
