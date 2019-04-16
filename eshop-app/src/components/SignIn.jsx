@@ -4,6 +4,7 @@ import * as firebase from "firebase";
 
 var userEmail = "";
 var userPassword = "";
+var user = {};
 
 class SignIn extends Component {
   constructor(props) {
@@ -25,9 +26,14 @@ class SignIn extends Component {
     this._isMounted = true;
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this._isMounted = false;
-  }
+    this.setState({
+      user: user,
+      email: this.state.email,
+      password: this.state.password
+    });
+  };
 
   handleInputChange(event) {
     this.setState({ email: event.target.value }, function() {
@@ -56,6 +62,7 @@ class SignIn extends Component {
       this.setState({ errorMsg: "Please fill all fields." });
     } else {
       const that = this;
+
       firebase
         .auth()
         .signInWithEmailAndPassword(email, pass)
@@ -70,6 +77,7 @@ class SignIn extends Component {
         if (firebaseUser) {
           // redirect to new page and update nav
           console.log(firebaseUser);
+          user = firebaseUser;
           if (this._isMounted) {
             this.setState({ redirect: true });
           }

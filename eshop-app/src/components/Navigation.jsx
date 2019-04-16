@@ -9,6 +9,7 @@ if (!firebase.apps.length) {
 }
 
 var searching = false;
+var user;
 
 const SearchBar = () => {
   return (
@@ -45,18 +46,20 @@ class Navigation extends Component {
     };
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this._isMounted = false;
-  }
+    this.setState({ user: user });
+  };
 
   componentDidMount() {
     this._isMounted = true;
 
     if ((this._isMounted = true)) {
       firebase.auth().onAuthStateChanged(
-        function(user) {
+        function(firebaseUser) {
+          user = firebaseUser;
           if (user) {
-            this.setState({ loggedIn: true });
+            this.setState({ user: user, loggedIn: true });
           } else {
             this.setState({ loggedIn: false });
           }
