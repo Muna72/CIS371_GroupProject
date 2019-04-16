@@ -180,10 +180,9 @@ class Cart extends Component {
             .once("value")
             .then(function(snapshot) {
                 var customerInfo = snapshot.val();
-                console.log("customer info orders" + customerInfo.orders);
-                that.setState({
-                    orders: customerInfo.orders
-                });
+                    that.setState({
+                        orders: customerInfo.orders
+                    });
             });
     };
 
@@ -210,10 +209,11 @@ class Cart extends Component {
 
     addOrderToAccount = () => {
 
-        //this.getCurrentOrders();
-        console.log(this.state.orders);
+        if(this.state.orders == undefined) {
+            this.state.orders = [];
+        }
+
         this.state.orders.push(this.createNewOrder());
-        console.log(this.state.orders);
 
         var updates = {};
         updates["/customers/" + this.state.user.uid + "/orders/"] = this.state.orders;
