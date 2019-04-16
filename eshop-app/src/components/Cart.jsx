@@ -8,7 +8,6 @@ var correspondingProduct = {};
 var items = new Map();
 var orderTotal = 0.0;
 var newOrder = {};
-
 var ordersList = [];
 
 class Cart extends Component {
@@ -232,8 +231,42 @@ class Cart extends Component {
       .update(updates);
 
     alert("Order completed successfully. Thank you for your business!");
+    this.changeProductQuantities();
     this.emptyCart();
   };
+
+    changeProductQuantities = () => {
+
+            for(var q = 0; q < cartItems.length; ++ q) {
+
+                var currentOnHand = 0;
+                var productKey = cartItems[q][0];
+                var productQuantity = cartItems[q][1];
+
+                // get the product matching this key
+                firebase
+                    .database()
+                    .ref("/products/")
+                    .child(productKey)
+                    .once("value")
+                    .then(function (snapshot) {
+                        correspondingProduct = snapshot.val();
+                        correspondingProduct.key = productKey;
+                        correspondingProduct.quantity = productQuantity;
+                        currentOnHand = correspondingProduct.onHand;
+
+                            var updates = {};
+                            updates["/products/" + productKey + "/onHand/"] = (currentOnHand - productQuantity);
+
+                            console.log(updates);
+
+                            firebase
+                                .database()
+                                .ref()
+                                .update(updates);
+                    });
+            }
+    }
 
   render() {
     if (this.state.redirect) {
