@@ -71,12 +71,13 @@ class GenerateOrders extends Component {
     if (accountOrders.length > 0) {
       // display newest orders first
       accountOrders.reverse();
-      orders = accountOrders.map(order => (
-        <div className="orderDetails">
+
+      orders = accountOrders.map((order, index) => (
+        <div className="orderDetails" key={index}>
           <div className="orderHeader">Order from {order.orderDate}</div>
           <ul>
-            {Object.keys(order.productsInOrder).map(product => (
-              <li>
+            {Object.keys(order.productsInOrder).map((product, index) => (
+              <li key={index}>
                 <span className="itemName">{product}</span>
                 <span className="itemPrice">
                   ${order.productsInOrder[product]}

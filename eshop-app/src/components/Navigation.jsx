@@ -71,7 +71,7 @@ class Navigation extends Component {
   // rerenders on every click inside the nav
 
   render() {
-    console.log("logged in state: " + this.state.loggedIn);
+    //console.log("logged in state: " + this.state.loggedIn);
 
     if (this.state.loggedIn && this.props.location.pathname === "/") {
       return (
