@@ -51,6 +51,7 @@ class Cart extends Component {
       .child("cart");
 
     cartItems = [];
+    this.getCurrentOrders();
 
     customerCartRef.on("child_added", snapshot => {
       var productKey = snapshot.key;
@@ -178,22 +179,29 @@ class Cart extends Component {
             .ref("/customers/" + this.state.user.uid)
             .once("value")
             .then(function(snapshot) {
-                console.log(snapshot.val());
                 var customerInfo = snapshot.val();
-                console.log(customerInfo.orders);
+                console.log("customer info orders" + customerInfo.orders);
                 that.setState({
                     orders: customerInfo.orders
                 });
-                console.log(customerInfo);
             });
-
     };
 
     createNewOrder() {
 
+        var cartItemsObj = {};
+        var date = new Date();
+
+        date =  date.toDateString();
+
+        for(var c = 0; c < cartItems.length; ++ c) {
+            var current = cartItems[c];
+            cartItemsObj[current[2].name] = current[2].price;
+        }
+
         newOrder = {
-            orderDate: new Date(),
-            productsInOrder: cartItems,
+            orderDate: date,
+            productsInOrder: cartItemsObj,
             totalPrice: this.state.orderTotal
         }
 
@@ -202,8 +210,10 @@ class Cart extends Component {
 
     addOrderToAccount = () => {
 
-        this.getCurrentOrders();
+        //this.getCurrentOrders();
+        console.log(this.state.orders);
         this.state.orders.push(this.createNewOrder());
+        console.log(this.state.orders);
 
         var updates = {};
         updates["/customers/" + this.state.user.uid + "/orders/"] = this.state.orders;
@@ -214,6 +224,7 @@ class Cart extends Component {
             .update(updates)
 
         alert("Order completed successfully. Thank you for your business!");
+        this.emptyCart();
     };
 
   render() {
