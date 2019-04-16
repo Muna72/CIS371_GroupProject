@@ -9,13 +9,14 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      email: "",
+      password: "",
       user: {},
       redirect: false,
-      redirect_createAcc: false
+      redirect_createAcc: false,
+      errorMsg: ""
     };
 
-    this.signInUser = this.signInUser.bind(this);
-    this.createUser = this.createUser.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
@@ -42,25 +43,39 @@ class SignIn extends Component {
 
   signInUser = e => {
     e.preventDefault();
-    const auth = firebase.auth();
     var email = this.state.email;
     var pass = this.state.password;
 
     console.log("Email: " + userEmail);
     console.log("Password: " + userPassword);
 
-    const promise = auth.signInWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message));
+    // reset error message
+    this.setState({ errorMsg: "" });
 
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-        // redirect to new page and update nav
-        console.log(firebaseUser);
-        if (this._isMounted) {
-          this.setState({ redirect: true });
+    if (email === "" || pass === "") {
+      this.setState({ errorMsg: "Please fill all fields." });
+    } else {
+      const that = this;
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, pass)
+        .catch(function(error) {
+          // Handle Errors here.
+          //var errorCode = error.code;
+          that.setState({ errorMsg: error.message });
+          // ...
+        });
+
+      firebase.auth().onAuthStateChanged(firebaseUser => {
+        if (firebaseUser) {
+          // redirect to new page and update nav
+          console.log(firebaseUser);
+          if (this._isMounted) {
+            this.setState({ redirect: true });
+          }
         }
-      }
-    });
+      });
+    }
   };
 
   createUser = e => {
@@ -96,6 +111,51 @@ class SignIn extends Component {
       );
     }
 
+    // error message present
+    if (this.state.errorMsg) {
+      return (
+        <div className="main">
+          <div className="sign-up-container">
+            <form>
+              <input
+                type="email"
+                className="field"
+                id="email"
+                defaultValue={this.state.email}
+                placeholder="Email"
+                onChange={this.handleInputChange}
+                autoComplete="email"
+              />
+              <p className="errormsg" id="email_error_1" />
+              <input
+                type="password"
+                className="field"
+                id="password"
+                defaultValue={this.state.password}
+                placeholder="Password"
+                onChange={this.handlePasswordChange}
+                autoComplete="current-password"
+              />
+              <p className="errormsg" id="password_error_1">
+                {this.state.errorMsg}
+              </p>
+              <div className="formButtons">
+                <button onClick={this.signInUser} className="formBtn signIn">
+                  Sign In
+                </button>
+                <button
+                  onClick={this.createUser}
+                  className="formBtn createAccount"
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="main">
         <div className="sign-up-container">
@@ -109,9 +169,7 @@ class SignIn extends Component {
               onChange={this.handleInputChange}
               autoComplete="email"
             />
-            <p className="errormsg" id="email_error_1">
-              {this.state.error}
-            </p>
+            <p className="errormsg" id="email_error_1" />
             <input
               type="password"
               className="field"
@@ -122,7 +180,7 @@ class SignIn extends Component {
               autoComplete="current-password"
             />
             <p className="errormsg" id="password_error_1">
-              {this.state.error}
+              <br />
             </p>
             <div className="formButtons">
               <button onClick={this.signInUser} className="formBtn signIn">

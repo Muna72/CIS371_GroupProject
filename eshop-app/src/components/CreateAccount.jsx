@@ -4,6 +4,7 @@ import * as firebase from "firebase";
 
 var userEmail = "";
 var userPassword = "";
+var userRepeatPassword = "";
 
 class CreateAccount extends Component {
   constructor(props) {
@@ -11,12 +12,16 @@ class CreateAccount extends Component {
     this.state = {
       email: "",
       password: "",
-      redirect: false
+      passwordRepeat: "",
+      redirect: false,
+      errorMsg: ""
     };
 
-    this.createUser = this.createUser.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleRepeatPasswordChange = this.handleRepeatPasswordChange.bind(
+      this
+    );
   }
 
   componentWillUnmount() {
@@ -46,6 +51,12 @@ class CreateAccount extends Component {
     });
   }
 
+  handleRepeatPasswordChange(event) {
+    this.setState({ passwordRepeat: event.target.value }, function() {
+      userRepeatPassword = this.state.passwordRepeat;
+    });
+  }
+
   // creates a customer account for them using their unique user id
   // this can hold their cart, orders, info, etc.
   writeUserData(user) {
@@ -68,38 +79,109 @@ class CreateAccount extends Component {
 
   createUser = e => {
     e.preventDefault();
-    const auth = firebase.auth();
+
     var email = this.state.email;
     var pass = this.state.password;
+    var repeatPass = this.state.passwordRepeat;
 
     console.log("Email: " + userEmail);
     console.log("Password: " + userPassword);
+    console.log("Repeat Password: " + userRepeatPassword);
 
-    const promise = auth.createUserWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message));
+    // reset error message
+    this.setState({ errorMsg: "" });
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        user = firebase.auth().currentUser;
+    if (email === "" || pass === "" || repeatPass === "") {
+      this.setState({ errorMsg: "Please fill all fields." });
+    } else if (pass !== repeatPass) {
+      this.setState({ errorMsg: "Passwords do not match." });
+    } else {
+      const that = this;
 
-        // save a space for them in the realtime database
-        this.writeUserData(user);
-      }
-    });
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, pass)
+        .catch(function(error) {
+          // Handle Errors here.
+          that.setState({ errorMsg: error.message });
+          // ...
+        });
 
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-        console.log(firebaseUser);
-        if (this._isMounted) {
-          this.setState({ redirect: true });
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          user = firebase.auth().currentUser;
+
+          // save a space for them in the realtime database
+          this.writeUserData(user);
         }
-      }
-    });
+      });
+
+      firebase.auth().onAuthStateChanged(firebaseUser => {
+        if (firebaseUser) {
+          console.log(firebaseUser);
+          if (this._isMounted) {
+            this.setState({ redirect: true });
+          }
+        }
+      });
+    }
   };
 
   render() {
     if (this.state.redirect) {
-      return <Redirect push to="/" />;
+      return <Redirect push to="/Account/" />;
+    }
+
+    // if an error message is present
+    if (this.state.errorMsg) {
+      return (
+        <div className="main">
+          <div className="sign-up-container">
+            <form>
+              <input
+                type="email"
+                className="field"
+                id="email"
+                defaultValue={this.props.location.state.email}
+                placeholder="Email"
+                onChange={this.handleInputChange}
+                autoComplete="email"
+              />
+              <p className="errormsg" id="email_error_1" />
+              <input
+                type="password"
+                className="field"
+                id="password"
+                defaultValue={this.props.location.state.password}
+                placeholder="Password"
+                onChange={this.handlePasswordChange}
+                autoComplete="current-password"
+              />
+              <p className="errormsg" id="password_error_1" />
+              <input
+                type="password"
+                className="field"
+                id="repeat_password"
+                defaultValue=""
+                placeholder="Repeat Password"
+                onChange={this.handleRepeatPasswordChange}
+                autoComplete="current-password"
+              />
+              <p className="errormsg" id="password_error_1">
+                {this.state.errorMsg}
+              </p>
+              <div className="formButtons">
+                <button
+                  onClick={this.createUser}
+                  className="formBtn createAccount"
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
     }
 
     return (
@@ -115,9 +197,7 @@ class CreateAccount extends Component {
               onChange={this.handleInputChange}
               autoComplete="email"
             />
-            <p className="errormsg" id="email_error_1">
-              {this.state.error}
-            </p>
+            <p className="errormsg" id="email_error_1" />
             <input
               type="password"
               className="field"
@@ -127,20 +207,18 @@ class CreateAccount extends Component {
               onChange={this.handlePasswordChange}
               autoComplete="current-password"
             />
-            <p className="errormsg" id="password_error_1">
-              {this.state.error}
-            </p>
+            <p className="errormsg" id="password_error_1" />
             <input
               type="password"
               className="field"
               id="repeat_password"
               defaultValue=""
               placeholder="Repeat Password"
-              onChange={this.handlePasswordChange}
+              onChange={this.handleRepeatPasswordChange}
               autoComplete="current-password"
             />
             <p className="errormsg" id="password_error_1">
-              {this.state.error}
+              <br />
             </p>
             <div className="formButtons">
               <button
