@@ -15,6 +15,43 @@ class GenerateItems extends Component {
       user: {},
       quantity: 1
     };
+
+    this._isMounted = false;
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+
+    if (this._isMounted) {
+      this.getCurrentUser();
+    }
+    // set up listeners and download data to be rendered to DOM
+    const rootRef = firebase.database().ref(); // ref() points to root node without arguement
+    const productsRef = rootRef.child("products");
+
+    storeProducts = [];
+
+    productsRef.on("child_added", snapshot => {
+      var product = snapshot.val();
+
+      // give each object a temporary element containing their key
+      product.key = snapshot.key;
+
+      // fix me: you need the key here.
+      storeProducts.push(product);
+
+      // console.log(storeProducts);
+
+      if (this._isMounted) {
+        this.setState({
+          products: storeProducts
+        });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   getCurrentUser = () => {
@@ -59,36 +96,6 @@ class GenerateItems extends Component {
       [name]: e.target.value
     });
   };
-
-  componentDidMount() {
-    this._isMounted = true;
-
-    if (this._isMounted) {
-      this.getCurrentUser();
-    }
-
-    // set up listeners and download data to be rendered to DOM
-    const rootRef = firebase.database().ref(); // ref() points to root node without arguement
-    const productsRef = rootRef.child("products");
-
-    storeProducts = [];
-
-    productsRef.on("child_added", snapshot => {
-      var product = snapshot.val();
-
-      // give each object a temporary element containing their key
-      product.key = snapshot.key;
-
-      // fix me: you need the key here.
-      storeProducts.push(product);
-
-      // console.log(storeProducts);
-
-      this.setState({
-        products: storeProducts
-      });
-    });
-  }
 
   render() {
     if (this.state.redirect) {

@@ -143,26 +143,29 @@ class Account extends Component {
   }
 
   changePassword() {
-
-      var newPass = this.state.newPassword;
+    var newPass = this.state.newPassword;
 
     if (this.state.newPassword === this.state.confirmPassword) {
-
-        firebase.auth()
-            .signInWithEmailAndPassword(this.state.user.email, this.state.currentPassword)
-            .then(function(user) {
-
-                firebase.auth().currentUser.updatePassword(newPass).then(function(){
-                    alert("Password updated successfully");
-                }).catch(function(err){
-                    alert("Error: " + err);
-                });
-            }).catch(function(err){
-                    alert("Error: " + err);
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(
+          this.state.user.email,
+          this.state.currentPassword
+        )
+        .then(function(user) {
+          firebase
+            .auth()
+            .currentUser.updatePassword(newPass)
+            .then(function() {
+              alert("Password updated successfully");
+            })
+            .catch(function(err) {
+              alert("Error: " + err);
+            });
+        })
+        .catch(function(err) {
+          alert("Error: " + err);
         });
-        this.state.confPass.value = "";
-        this.state.newPass.value = "";
-        this.state.currPass.value = "";
     } else {
       alert("New password fields do not match. Please re-enter new password.");
     }
@@ -260,7 +263,6 @@ class Account extends Component {
             <input
               type="text"
               id="password"
-              ref={el => this.state.currPass = el}
               onChange={e => this.handleInputChange(e, "currentPassword")}
             />
             <br />
@@ -268,7 +270,6 @@ class Account extends Component {
             <input
               type="text"
               id="newPassword"
-              ref={el => this.state.newPass = el}
               onChange={e => this.handleInputChange(e, "newPassword")}
             />
             <br />
@@ -276,7 +277,6 @@ class Account extends Component {
             <input
               type="text"
               id="confirmPassword"
-              ref={el => this.state.confPass = el}
               onChange={e => this.handleInputChange(e, "confirmPassword")}
             />
             <br />

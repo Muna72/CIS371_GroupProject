@@ -9,6 +9,8 @@ var items = new Map();
 var orderTotal = 0.0;
 var newOrder = {};
 
+var ordersList = [];
+
 class Cart extends Component {
   constructor(props) {
     super(props);
@@ -71,8 +73,6 @@ class Cart extends Component {
           correspondingProduct.quantity = productQuantity;
 
           cartItems.push([productKey, productQuantity, correspondingProduct]);
-
-          console.log(cartItems);
 
           that.setState(
             {
@@ -153,9 +153,7 @@ class Cart extends Component {
   };
 
   calculateOrderTotal = () => {
-    console.log("Calculating order total.");
     // loop through all cart items
-    console.log(cartItems);
     orderTotal = 0;
 
     var numOfItems = cartItems.length;
@@ -170,62 +168,72 @@ class Cart extends Component {
     });
   };
 
-    getCurrentOrders = () => {
-        // need to get their name and shipping address
-        var that = this;
+  getCurrentOrders = () => {
+    // need to get their name and shipping address
+    var that = this;
 
-        firebase
-            .database()
-            .ref("/customers/" + this.state.user.uid)
-            .once("value")
-            .then(function(snapshot) {
-                var customerInfo = snapshot.val();
-                    that.setState({
-                        orders: customerInfo.orders
-                    });
-            });
-    };
+    firebase
+      .database()
+      .ref("/customers/" + this.state.user.uid)
+      .once("value")
+      .then(function(snapshot) {
+        var customerInfo = snapshot.val();
 
-    createNewOrder() {
+        // save locally
+        ordersList = customerInfo.orders;
 
-        var cartItemsObj = {};
-        var date = new Date();
+        that.setState({
+          orders: customerInfo.orders
+        });
+      });
+  };
 
-        date =  date.toDateString();
+  createNewOrder() {
+    var cartItemsObj = {};
+    var date = new Date();
 
-        for(var c = 0; c < cartItems.length; ++ c) {
-            var current = cartItems[c];
-            cartItemsObj[current[2].name] = current[2].price;
-        }
+    date = date.toDateString();
 
-        newOrder = {
-            orderDate: date,
-            productsInOrder: cartItemsObj,
-            totalPrice: this.state.orderTotal
-        }
-
-        return newOrder;
+    for (var c = 0; c < cartItems.length; ++c) {
+      var current = cartItems[c];
+      cartItemsObj[current[2].name] = current[2].price;
     }
 
-    addOrderToAccount = () => {
-
-        if(this.state.orders == undefined) {
-            this.state.orders = [];
-        }
-
-        this.state.orders.push(this.createNewOrder());
-
-        var updates = {};
-        updates["/customers/" + this.state.user.uid + "/orders/"] = this.state.orders;
-
-        firebase
-            .database()
-            .ref()
-            .update(updates)
-
-        alert("Order completed successfully. Thank you for your business!");
-        this.emptyCart();
+    newOrder = {
+      orderDate: date,
+      productsInOrder: cartItemsObj,
+      totalPrice: this.state.orderTotal
     };
+
+    return newOrder;
+  }
+
+  addOrderToAccount = () => {
+    if (this.state.orders === undefined) {
+      ordersList = [];
+    }
+
+    ordersList.push(this.createNewOrder());
+
+    this.setState({
+      orders: ordersList
+    });
+
+    var updates = {};
+    updates["/customers/" + this.state.user.uid + "/orders/"] = ordersList;
+
+    console.log(updates);
+
+    console.log(this.state.orders);
+
+    firebase
+      .database()
+      .ref()
+      .update(updates);
+
+    alert("Order completed successfully. Thank you for your business!");
+    this.emptyCart();
+  };
 
   render() {
     if (this.state.redirect) {
@@ -267,7 +275,12 @@ class Cart extends Component {
 
     return (
       <div className="main">
-        <button className="checkoutBtn" onClick={() => this.addOrderToAccount()}>Proceed to Checkout</button>
+        <button
+          className="checkoutBtn"
+          onClick={() => this.addOrderToAccount()}
+        >
+          Proceed to Checkout
+        </button>
         <table>
           <tbody>
             <tr>
