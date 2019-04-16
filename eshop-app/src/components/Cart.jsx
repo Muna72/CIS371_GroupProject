@@ -237,13 +237,14 @@ class Cart extends Component {
 
     changeProductQuantities = () => {
 
-            for(var q = 0; q < cartItems.length; ++ q) {
+        var updates = {};
+
+            for(let q = 0; q < cartItems.length; ++ q) {
 
                 var currentOnHand = 0;
-                var productKey = cartItems[q][0];
-                var productQuantity = cartItems[q][1];
+                let productKey = cartItems[q][0];
+                let productQuantity = cartItems[q][1];
 
-                // get the product matching this key
                 firebase
                     .database()
                     .ref("/products/")
@@ -255,15 +256,14 @@ class Cart extends Component {
                         correspondingProduct.quantity = productQuantity;
                         currentOnHand = correspondingProduct.onHand;
 
-                            var updates = {};
-                            updates["/products/" + productKey + "/onHand/"] = (currentOnHand - productQuantity);
+                        updates["/products/" + productKey + "/onHand/"] = (currentOnHand - productQuantity);
 
                             console.log(updates);
 
-                            firebase
-                                .database()
-                                .ref()
-                                .update(updates);
+                        firebase
+                            .database()
+                            .ref()
+                            .update(updates);
                     });
             }
     }
