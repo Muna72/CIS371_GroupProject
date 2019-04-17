@@ -10,16 +10,8 @@ class Product extends Component {
         }
     }
 
-    getCurrentProduct = async () => {
-        //console.log(this.props.match.params.key);
-
-        //declare props for product in state
-        let product = Object.assign({}, this.state.product);
-        var description;
-        var imgUrl;
-        var name;
-        var onHand;
-        var price;
+    //returns a product as a promise
+    getCurrentProduct = async () => {      
        
         //reference to firebase db
         const rootRef = firebase.database().ref();
@@ -27,48 +19,45 @@ class Product extends Component {
         const productsRef = rootRef.child("products");
         //reference to the single product
         const productRef = productsRef.child(this.props.match.params.key);
-        //var product = firebase.Object(productRef);
-        //var product = {};
 
         //calls on the product once and sets the props
         productRef.once("value")
         .then(snapshot => {
             console.log(snapshot.val());
-            //product = snapshot.val();
-            description = snapshot.child("description").val();
-            imgUrl = snapshot.child("imgUrl").val();
-            name = snapshot.child("name").val();
-            onHand = snapshot.child("onHand").val();
-            price = snapshot.child("price").val();
-        }).then(console.log(product));
-        
-        return Promise.resolve({
-                description: description,
-                imgUrl: imgUrl,
-                name: name,
-                onHand: onHand,
-                price: price
+            this.setState({
+                product: {
+                    description: snapshot.child("description").val(),
+                    name: snapshot.child("name").val(),
+                    onHand: snapshot.child("onHand").val(),
+                    price: snapshot.child("price").val(),
+                }
+            })
         });
         
     }
 
-    componentDidMount = async () => {
-        const product = await this.getCurrentProduct()
-        
-        this.setState({
-            product: product
-        });
-        
+    componentDidMount =  () => {
+        this.getCurrentProduct();        
     }
 
     render() {
         console.log(this.state.product); //prints out an empty object + the product
+        //if the product has not loaded, this div will be shown
         if (this.state.product === null) {
             return <div><p>Loading Product</p></div>
         }
         console.log(this.state.product);
+        //Once firebase gets the product information, it will be rendered here
         return <div>
-            <p></p>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <p>{this.state.product.name}</p>
+            <p>{this.state.product.onHand}</p>
+            <p>Price: ${this.state.product.price}</p>
+            
         </div>
     }
 }
