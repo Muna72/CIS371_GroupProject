@@ -70,8 +70,59 @@ class Cart extends Component {
           correspondingProduct = snapshot.val();
           correspondingProduct.key = productKey;
           correspondingProduct.quantity = productQuantity;
+          console.log(correspondingProduct);
 
-          cartItems.push([productKey, productQuantity, correspondingProduct]);
+          // if any items are in the cart that have a quantity less than what remains
+          if (
+            correspondingProduct.onHand < productQuantity &&
+            correspondingProduct.onHand > 0
+          ) {
+            let diff = productQuantity - correspondingProduct.onHand;
+
+            if (diff === 1) {
+              alert(
+                diff +
+                  ' "' +
+                  correspondingProduct.name +
+                  '" was removed from the cart. Not enough remain.'
+              );
+            } else {
+              alert(
+                diff +
+                  ' "' +
+                  correspondingProduct.name +
+                  '"s were removed from the cart. Not enough remain.'
+              );
+            }
+
+            cartItems.push([
+              productKey,
+              correspondingProduct.onHand,
+              correspondingProduct
+            ]);
+
+            // update firebase to the new quantity remaining
+            var updates = {};
+            updates[
+              "/customers/" + that.state.user.uid + "/cart/" + productKey
+            ] = correspondingProduct.onHand;
+
+            firebase
+              .database()
+              .ref()
+              .update(updates);
+          } else if (correspondingProduct.onHand <= 0) {
+            alert(
+              correspondingProduct.name +
+                " was removed from the cart. None remain."
+            );
+
+            // delete the item from the cart since none remain
+            that.removeFromCart(productKey);
+          } else {
+            // add it normally
+            cartItems.push([productKey, productQuantity, correspondingProduct]);
+          }
 
           that.setState(
             {
@@ -269,7 +320,6 @@ class Cart extends Component {
 
     // ERROR: keys are showing as duplicates if a cart item is deleted
     // and added back in without refreshing the page
-    // Also, add a total as the last row.
     items = cartItems.map(product => (
       <tr key={product[0]}>
         <td>
