@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as firebase from "firebase";
 import { Redirect } from "react-router";
+import { NavLink } from "react-router-dom";
 
 var db = firebase.database();
 var rootRef = db.ref();
@@ -299,9 +300,9 @@ class Account extends Component {
             />
           </div>
           <div className="sidenav">
-            <a href="/Orders">My Orders</a>
+            <NavLink to={"/Orders/"}>My Orders</NavLink>
             <br />
-            <a href="/Cart">Current Cart</a>
+            <NavLink to={"/Cart/"}>Current Cart</NavLink>
             <p onClick={this.signOut}>Logout</p>
             <br />
           </div>
@@ -313,9 +314,9 @@ class Account extends Component {
       <div className="main">
         <p>Loading...</p>
         <div className="sidenav">
-          <a href="/Orders">My Orders</a>
+          <a href="/Orders/">My Orders</a>
           <br />
-          <a href="/Cart">Current Cart</a>
+          <a href="/Cart/">Current Cart</a>
           <p onClick={this.signOut}>Logout</p>
           <br />
         </div>

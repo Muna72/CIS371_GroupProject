@@ -9,7 +9,6 @@ import SignIn from "./components/SignIn";
 import CreateAccount from "./components/CreateAccount";
 import Cart from "./components/Cart";
 import Product from "./components/Product";
-import Error from "./components/Error";
 
 import "./index.css";
 
@@ -27,7 +26,7 @@ class App extends Component {
             <Route path="/SignIn/" component={SignIn} />
             <Route path="/CreateAccount/" component={CreateAccount} />
             <Route path="/Product/:key" component={Product} />
-            <Route component={Error} />
+            <Route component={Shop} />
           </Switch>
         </div>
       </Router>

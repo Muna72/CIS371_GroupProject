@@ -323,11 +323,11 @@ class Cart extends Component {
     // and added back in without refreshing the page
     items = cartItems.map(product => (
       <tr key={product[0]}>
-        <NavLink to={`/Product/${product[0]}`}>
-          <td>
+        <td>
+          <NavLink to={`/Product/${product[0]}`}>
             <img src={product[2].imgUrl} className="thumbnail" alt="" />
-          </td>
-        </NavLink>
+          </NavLink>
+        </td>
         <td>{product[2].name}</td>
         <td>{product[2].description}</td>
         <td>{product[1]}</td>
@@ -352,7 +352,6 @@ class Cart extends Component {
         </td>
       </tr>
     ));
-
     return (
       <div className="main">
         <button
@@ -392,7 +391,6 @@ class Cart extends Component {
                 />
               </td>
               <td>
-                {" "}
                 <button
                   onClick={() => this.emptyCart()}
                   className="checkoutBtn emptyCartBtn"
@@ -407,5 +405,4 @@ class Cart extends Component {
     );
   }
 }
-
 export default Cart;
