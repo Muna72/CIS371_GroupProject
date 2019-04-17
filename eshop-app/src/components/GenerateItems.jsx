@@ -31,16 +31,15 @@ class GenerateItems extends Component {
 
     storeProducts = [];
 
-    productsRef.on("child_added", snapshot => {
-      var product = snapshot.val();
+    productsRef.on("value", snapshot => {
+      storeProducts = [];
+      snapshot.forEach(function(product) {
+        // give each object a temporary element containing their key
+        var nextProduct = product.val();
+        nextProduct.key = parseInt(product.key);
 
-      // give each object a temporary element containing their key
-      product.key = snapshot.key;
-
-      // fix me: you need the key here.
-      storeProducts.push(product);
-
-      // console.log(storeProducts);
+        storeProducts.push(nextProduct);
+      });
 
       if (this._isMounted) {
         this.setState({
@@ -65,24 +64,41 @@ class GenerateItems extends Component {
   };
 
   writeUserData(user, productKey, quantity) {
+    // first check to make sure there is enough remaining before adding it to the cart
+    var quantityRemaining;
+
     firebase
       .database()
-      .ref("customers/" + user.uid)
-      .child("cart")
-      .update({
-        [productKey]: parseInt(quantity, 10)
+      .ref("/products/" + productKey)
+      .child("onHand")
+      .once("value")
+      .then(function(snapshot) {
+        quantityRemaining = snapshot.val();
+
+        if (quantityRemaining < quantity) {
+          alert("Not enough remain!");
+        } else {
+          firebase
+            .database()
+            .ref("customers/" + user.uid)
+            .child("cart")
+            .update({
+              [productKey]: parseInt(quantity, 10)
+            });
+        }
       });
   }
 
   addToCart = (productKey, quantity) => {
     // if they are not logged in, go to the sign in page
-    if (this.state.user && Object.keys(this.state.user).length === 0) {
-      this.setState({ redirect: true });
-    } else {
-      // user is logged in. add the item to the cart.
-
-      this.writeUserData(this.state.user, productKey, quantity);
-      this.resetQuantity();
+    if (quantity > 0) {
+      if (this.state.user && Object.keys(this.state.user).length === 0) {
+        this.setState({ redirect: true });
+      } else {
+        // user is logged in. add the item to the cart.
+        this.writeUserData(this.state.user, productKey, quantity);
+        this.resetQuantity();
+      }
     }
   };
 
@@ -102,8 +118,11 @@ class GenerateItems extends Component {
       return <Redirect push to="/SignIn/" />;
     }
 
-    items = storeProducts.map(product => (
-      <div key={product.key} className="storeItem">
+    items = null;
+
+    // key could also be product.key
+    items = storeProducts.map((product, index) => (
+      <div key={index} className="storeItem">
         <div className="thumbnailContainer">
           <img src={product.imgUrl} className="thumbnail" alt="" />
         </div>

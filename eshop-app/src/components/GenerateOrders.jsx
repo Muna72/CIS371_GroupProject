@@ -79,9 +79,18 @@ class GenerateOrders extends Component {
             {Object.keys(order.productsInOrder).map((product, index) => (
               <li key={index}>
                 <span className="itemName">{product}</span>
-                <span className="itemPrice">
-                  ${order.productsInOrder[product]}
-                </span>
+
+                <CurrencyFormat
+                  value={order.productsInOrder[product]}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"$"}
+                  decimalScale={2}
+                  fixedDecimalScale={true}
+                  renderText={value => (
+                    <span className="itemPrice">{value}</span>
+                  )}
+                />
               </li>
             ))}
           </ul>

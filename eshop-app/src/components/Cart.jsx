@@ -208,31 +208,29 @@ class Cart extends Component {
   }
 
   addOrderToAccount = () => {
-    if (this.state.orders === undefined) {
-      ordersList = [];
+    if (this.state.cartItems.length > 0) {
+      if (this.state.orders === undefined) {
+        ordersList = [];
+      }
+
+      ordersList.push(this.createNewOrder());
+
+      this.setState({
+        orders: ordersList
+      });
+
+      var updates = {};
+      updates["/customers/" + this.state.user.uid + "/orders/"] = ordersList;
+
+      firebase
+        .database()
+        .ref()
+        .update(updates);
+
+      alert("Order completed successfully. Thank you for your business!");
+      this.changeProductQuantities();
+      this.emptyCart();
     }
-
-    ordersList.push(this.createNewOrder());
-
-    this.setState({
-      orders: ordersList
-    });
-
-    var updates = {};
-    updates["/customers/" + this.state.user.uid + "/orders/"] = ordersList;
-
-    console.log(updates);
-
-    console.log(this.state.orders);
-
-    firebase
-      .database()
-      .ref()
-      .update(updates);
-
-    alert("Order completed successfully. Thank you for your business!");
-    this.changeProductQuantities();
-    this.emptyCart();
   };
 
   changeProductQuantities = () => {
