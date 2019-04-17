@@ -356,3 +356,33 @@ th {
   margin-left: 150px;
   margin-top: 150px;
 }
+
+/* PRODUCT PAGE */
+
+.largeImage {
+  max-width: 350px;
+  max-height: 350px;
+}
+
+.product-container {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-top: 100px;
+  align-items: center;
+}
+
+.product-image-container {
+  margin-left: 100px;
+  margin-right: 50px;
+}
+
+.product-description {
+  background-color: #fb9c6c;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 0px 30px 0px 30px;
+  width: 40%;
+  margin-right: 15px;
+  padding: 20px;
+}

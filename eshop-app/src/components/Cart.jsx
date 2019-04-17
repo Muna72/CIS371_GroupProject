@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as firebase from "firebase";
 import { Redirect } from "react-router";
+import { NavLink } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
 
 var cartItems = [];
@@ -322,9 +323,11 @@ class Cart extends Component {
     // and added back in without refreshing the page
     items = cartItems.map(product => (
       <tr key={product[0]}>
-        <td>
-          <img src={product[2].imgUrl} className="thumbnail" alt="" />
-        </td>
+        <NavLink to={`/Product/${product[0]}`}>
+          <td>
+            <img src={product[2].imgUrl} className="thumbnail" alt="" />
+          </td>
+        </NavLink>
         <td>{product[2].name}</td>
         <td>{product[2].description}</td>
         <td>{product[1]}</td>
