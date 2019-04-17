@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as firebase from "firebase";
 import { Redirect } from "react-router";
+import { NavLink } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
 
 var storeProducts = [];
@@ -124,7 +125,9 @@ class GenerateItems extends Component {
     items = storeProducts.map((product, index) => (
       <div key={index} className="storeItem">
         <div className="thumbnailContainer">
-          <img src={product.imgUrl} className="thumbnail" alt="" />
+        <NavLink to={`/Product/${product.key}`}>
+            <img src={product.imgUrl} className="thumbnail" alt="" />
+        </NavLink>
         </div>
         <div className="itemActions">
           <input
