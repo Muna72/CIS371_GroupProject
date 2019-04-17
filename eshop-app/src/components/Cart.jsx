@@ -235,38 +235,34 @@ class Cart extends Component {
     this.emptyCart();
   };
 
-    changeProductQuantities = () => {
+  changeProductQuantities = () => {
+    var updates = {};
+    var currentOnHand = 0;
+    var productKey = 0;
+    var productQuantity = 0;
+    var remaining = 0;
 
-        var updates = {};
+    firebase
+      .database()
+      .ref("/products/")
+      .once("value")
+      .then(function(snapshot) {
+        for (let q = 0; q < cartItems.length; ++q) {
+          currentOnHand = cartItems[q][2].onHand;
+          productQuantity = cartItems[q][2].quantity;
+          productKey = cartItems[q][0];
 
-            for(let q = 0; q < cartItems.length; ++ q) {
+          remaining = currentOnHand - productQuantity;
 
-                var currentOnHand = 0;
-                let productKey = cartItems[q][0];
-                let productQuantity = cartItems[q][1];
+          updates["/products/" + productKey + "/onHand/"] = remaining;
+        }
 
-                firebase
-                    .database()
-                    .ref("/products/")
-                    .child(productKey)
-                    .once("value")
-                    .then(function (snapshot) {
-                        correspondingProduct = snapshot.val();
-                        correspondingProduct.key = productKey;
-                        correspondingProduct.quantity = productQuantity;
-                        currentOnHand = correspondingProduct.onHand;
-
-                        updates["/products/" + productKey + "/onHand/"] = (currentOnHand - productQuantity);
-
-                            console.log(updates);
-
-                        firebase
-                            .database()
-                            .ref()
-                            .update(updates);
-                    });
-            }
-    }
+        firebase
+          .database()
+          .ref()
+          .update(updates);
+      });
+  };
 
   render() {
     if (this.state.redirect) {
